@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Sweden Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        #map-container {
+            display: flex;
+            height: 100vh;
+            width: 100%;
+        }
+        
+        #sidebar {
+            width: 400px;
+            background: white;
+            border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        #sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        #sidebar-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #003D5C;
+            margin-bottom: 16px;
+        }
+        
+        #search-box {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        #search-box:focus {
+            outline: none;
+            border-color: #003D5C;
+        }
+        
+        #volunteer-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        
+        .volunteer-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .volunteer-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        .volunteer-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #003D5C;
+            margin-bottom: 4px;
+        }
+        
+        .volunteer-location {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 8px;
+        }
+        
+        .volunteer-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            font-size: 11px;
+            padding: 4px 8px;
+            background: #f3f4f6;
+            border-radius: 4px;
+            color: #4b5563;
+        }
+        
+        #map {
+            flex: 1;
+            height: 100%;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            border-radius: 8px;
+            padding: 0;
+        }
+        
+        .leaflet-popup-content {
+            margin: 0;
+            min-width: 200px;
+        }
+        
+        .popup-content {
+            padding: 16px;
+        }
+        
+        .popup-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #003D5C;
+            margin-bottom: 8px;
+        }
+        
+        .popup-info {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .map-legend {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .legend-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #003D5C;
+            margin-bottom: 12px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #4b5563;
+        }
+        
+        .legend-color {
+            width: 24px;
+            height: 16px;
+            border-radius: 4px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .filter-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #E8F4F8;
+            color: #003D5C;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+        
+        .clear-filter {
+            cursor: pointer;
+            font-weight: 600;
+            color: #F39C12;
+        }
+        
+        .clear-filter:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            #map-container {
+                flex-direction: column;
+            }
+            
+            #sidebar {
+                width: 100%;
+                height: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="map-container">
+        <div id="sidebar">
+            <div id="sidebar-header">
+                <h1>Sök Kontaktpersoner</h1>
+                <input type="text" id="search-box" placeholder="Sök efter namn, kommun...">
+                <div id="filter-display"></div>
+            </div>
+            <div id="volunteer-list"></div>
+        </div>
+        <div style="position: relative; flex: 1;">
+            <div id="map"></div>
+            <div class="map-legend">
+                <div class="legend-title">Volontärtäthet</div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #0D9488;"></div>
+                    <span>16+ volontärer</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2DD4BF;"></div>
+                    <span>6-15 volontärer</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #99F6E4;"></div>
+                    <span>1-5 volontärer</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #F3F4F6;"></div>
+                    <span>Inga volontärer</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mock volunteer data
+        const volunteers = [
+            { id: 1, name: 'Anna Andersson', municipality: 'Stockholm', county: 'Stockholm län', lat: 59.3293, lng: 18.0686, age: 28, interests: ['Läsning', 'Promenader'], languages: ['Svenska', 'Engelska'] },
+            { id: 2, name: 'Erik Johansson', municipality: 'Göteborg', county: 'Västra Götalands län', lat: 57.7089, lng: 11.9746, age: 35, interests: ['Sport', 'Matlagning'], languages: ['Svenska', 'Engelska'] },
+            { id: 3, name: 'Maria Svensson', municipality: 'Malmö', county: 'Skåne län', lat: 55.6050, lng: 13.0038, age: 42, interests: ['Trädgård', 'Musik'], languages: ['Svenska', 'Danska'] },
+            { id: 4, name: 'Lars Nilsson', municipality: 'Uppsala', county: 'Uppsala län', lat: 59.8586, lng: 17.6389, age: 31, interests: ['Historia', 'Läsning'], languages: ['Svenska', 'Engelska'] },
+            { id: 5, name: 'Karin Bergström', municipality: 'Linköping', county: 'Östergötlands län', lat: 58.4108, lng: 15.6214, age: 29, interests: ['Dans', 'Foto'], languages: ['Svenska'] },
+            { id: 6, name: 'Johan Lundberg', municipality: 'Örebro', county: 'Örebro län', lat: 59.2753, lng: 15.2134, age: 38, interests: ['Cykling', 'Natur'], languages: ['Svenska', 'Engelska'] },
+            { id: 7, name: 'Sofia Eriksson', municipality: 'Västerås', county: 'Västmanlands län', lat: 59.6099, lng: 16.5448, age: 26, interests: ['Konst', 'Teater'], languages: ['Svenska', 'Franska'] },
+            { id: 8, name: 'Anders Karlsson', municipality: 'Helsingborg', county: 'Skåne län', lat: 56.0465, lng: 12.6945, age: 44, interests: ['Fiske', 'Båt'], languages: ['Svenska', 'Danska'] },
+        ];
+
+        // Mock municipality data (simplified GeoJSON)
+        const municipalities = {
+            'Stockholm': { lat: 59.3293, lng: 18.0686, volunteerCount: 24 },
+            'Göteborg': { lat: 57.7089, lng: 11.9746, volunteerCount: 18 },
+            'Malmö': { lat: 55.6050, lng: 13.0038, volunteerCount: 15 },
+            'Uppsala': { lat: 59.8586, lng: 17.6389, volunteerCount: 12 },
+            'Linköping': { lat: 58.4108, lng: 15.6214, volunteerCount: 8 },
+            'Örebro': { lat: 59.2753, lng: 15.2134, volunteerCount: 7 },
+            'Västerås': { lat: 59.6099, lng: 16.5448, volunteerCount: 6 },
+            'Helsingborg': { lat: 56.0465, lng: 12.6945, volunteerCount: 5 },
+        };
+
+        // Initialize map
+        const map = L.map('map').setView([62.0, 15.0], 5);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 18
+        }).addTo(map);
+
+        // State
+        let selectedMunicipality = null;
+        let markers = L.markerClusterGroup({
+            maxClusterRadius: 50,
+            iconCreateFunction: function(cluster) {
+                const count = cluster.getChildCount();
+                let size = 'small';
+                if (count > 10) size = 'large';
+                else if (count > 5) size = 'medium';
+                
+                return L.divIcon({
+                    html: '<div style="background: #F39C12; color: white; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);">' + count + '</div>',
+                    className: 'marker-cluster',
+                    iconSize: L.point(40, 40)
+                });
+            }
+        });
+
+        // Add volunteer markers
+        volunteers.forEach(volunteer => {
+            const marker = L.marker([volunteer.lat, volunteer.lng], {
+                icon: L.divIcon({
+                    html: '<div style="background: #F39C12; color: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.2);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg></div>',
+                    className: 'volunteer-marker',
+                    iconSize: L.point(32, 32)
+                })
+            });
+
+            marker.bindPopup(`
+                <div class="popup-content">
+                    <div class="popup-title">${volunteer.name}, ${volunteer.age}</div>
+                    <div class="popup-info"><strong>Plats:</strong> ${volunteer.municipality}</div>
+                    <div class="popup-info"><strong>Intressen:</strong> ${volunteer.interests.join(', ')}</div>
+                    <div class="popup-info"><strong>Språk:</strong> ${volunteer.languages.join(', ')}</div>
+                </div>
+            `);
+
+            markers.addLayer(marker);
+        });
+
+        map.addLayer(markers);
+
+        // Add municipality markers
+        Object.entries(municipalities).forEach(([name, data]) => {
+            const circle = L.circle([data.lat, data.lng], {
+                color: '#003D5C',
+                fillColor: getColorByCount(data.volunteerCount),
+                fillOpacity: 0.6,
+                radius: 20000,
+                weight: 2
+            }).addTo(map);
+
+            circle.bindTooltip(`
+                <div style="padding: 8px;">
+                    <strong>${name}</strong><br>
+                    ${data.volunteerCount} volontärer
+                </div>
+            `, { sticky: true });
+
+            circle.on('click', () => {
+                selectMunicipality(name);
+            });
+
+            circle.on('mouseover', function() {
+                this.setStyle({ color: '#F39C12', weight: 3 });
+            });
+
+            circle.on('mouseout', function() {
+                if (selectedMunicipality !== name) {
+                    this.setStyle({ color: '#003D5C', weight: 2 });
+                }
+            });
+        });
+
+        function getColorByCount(count) {
+            if (count >= 16) return '#0D9488';
+            if (count >= 6) return '#2DD4BF';
+            if (count >= 1) return '#99F6E4';
+            return '#F3F4F6';
+        }
+
+        function selectMunicipality(name) {
+            selectedMunicipality = name;
+            const data = municipalities[name];
+            
+            // Zoom to municipality
+            map.setView([data.lat, data.lng], 10);
+            
+            // Update filter display
+            document.getElementById('filter-display').innerHTML = `
+                <div class="filter-badge">
+                    <span>Filtrerat: ${name}</span>
+                    <span class="clear-filter" onclick="clearFilter()">✕</span>
+                </div>
+            `;
+            
+            renderVolunteers();
+        }
+
+        function clearFilter() {
+            selectedMunicipality = null;
+            document.getElementById('filter-display').innerHTML = '';
+            map.setView([62.0, 15.0], 5);
+            renderVolunteers();
+        }
+
+        function renderVolunteers() {
+            const filtered = selectedMunicipality 
+                ? volunteers.filter(v => v.municipality === selectedMunicipality)
+                : volunteers;
+
+            const listHtml = filtered.map(v => `
+                <div class="volunteer-card" onclick="showVolunteerOnMap(${v.lat}, ${v.lng})">
+                    <div class="volunteer-name">${v.name}, ${v.age}</div>
+                    <div class="volunteer-location">${v.municipality} • ${v.county}</div>
+                    <div class="volunteer-tags">
+                        ${v.languages.map(lang => `<span class="tag">${lang}</span>`).join('')}
+                        ${v.interests.map(int => `<span class="tag">${int}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('volunteer-list').innerHTML = listHtml || '<div style="padding: 16px; text-align: center; color: #9ca3af;">Inga volontärer hittades</div>';
+        }
+
+        function showVolunteerOnMap(lat, lng) {
+            map.setView([lat, lng], 12);
+        }
+
+        // Search functionality
+        document.getElementById('search-box').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = volunteers.filter(v => 
+                v.name.toLowerCase().includes(query) ||
+                v.municipality.toLowerCase().includes(query) ||
+                v.interests.some(i => i.toLowerCase().includes(query))
+            );
+
+            const listHtml = filtered.map(v => `
+                <div class="volunteer-card" onclick="showVolunteerOnMap(${v.lat}, ${v.lng})">
+                    <div class="volunteer-name">${v.name}, ${v.age}</div>
+                    <div class="volunteer-location">${v.municipality} • ${v.county}</div>
+                    <div class="volunteer-tags">
+                        ${v.languages.map(lang => `<span class="tag">${lang}</span>`).join('')}
+                        ${v.interests.map(int => `<span class="tag">${int}</span>`).join('')}
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('volunteer-list').innerHTML = listHtml || '<div style="padding: 16px; text-align: center; color: #9ca3af;">Inga volontärer hittades</div>';
+        });
+
+        // Initial render
+        renderVolunteers();
+    </script>
+</body>
+</html>
