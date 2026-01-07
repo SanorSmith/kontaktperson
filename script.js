@@ -16,6 +16,13 @@ class KontaktpersonPlatform {
 
     // Page Navigation
     showPage(pageId) {
+        // Check access permissions
+        if (typeof authManager !== 'undefined' && !authManager.canAccessPage(pageId)) {
+            alert('Du måste logga in för att komma åt denna sida.');
+            this.showPage('page-login');
+            return;
+        }
+
         // Hide all pages
         document.querySelectorAll('.app-page').forEach(page => {
             page.classList.add('hidden');

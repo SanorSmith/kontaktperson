@@ -9,6 +9,7 @@
 </head>
 <body class="antialiased min-h-screen relative">
 
+    <script src="auth.js"></script>
     <script src="script.js"></script>
     <script>
         // Auto-show registration page on load
@@ -30,7 +31,7 @@
             </a>
             <button onclick="showPage('page-detail')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">5. Volunteer Detail</button>
             <button onclick="showPage('page-dashboard')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">6. Social Worker Dash</button>
-            <button onclick="showPage('page-admin')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">7. Admin Panel</button>
+            <button onclick="showPage('page-admin')" class="admin-only hidden text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">7. Admin Panel</button>
             <button onclick="showPage('page-settings')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">8. Settings</button>
             <button onclick="showPage('page-faq')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">9. FAQ</button>
         </div>
@@ -60,11 +61,18 @@
                 </nav>
 
                 <div class="flex gap-3">
-                    <button onclick="showPage('page-login')" class="bg-white text-[#003D5C] px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition">
+                    <!-- Show when NOT logged in -->
+                    <button onclick="showPage('page-login')" class="login-button bg-white text-[#003D5C] px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition">
                         Logga in
                     </button>
-                    <button onclick="showPage('page-register')" class="bg-[#F39C12] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#E67E22] hover:shadow-lg transition shadow-md">
+                    <button onclick="showPage('page-register')" class="login-button bg-[#F39C12] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#E67E22] hover:shadow-lg transition shadow-md">
                         Registrera
+                    </button>
+                    
+                    <!-- Show when logged in -->
+                    <span class="user-name-display hidden text-white/90 px-4 py-2 text-sm font-medium"></span>
+                    <button onclick="handleLogout()" class="logout-button hidden bg-red-500 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-red-600 hover:shadow-lg transition">
+                        Logga ut
                     </button>
                 </div>
             </div>
@@ -482,14 +490,14 @@
             </div>
             <h1 class="text-2xl font-bold text-[#003D5C] text-center mb-8 tracking-tight">Logga in</h1>
             
-            <div class="space-y-4">
+            <form onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium text-[#2C3E50] mb-1.5">E-postadress</label>
-                    <input type="email" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C]" placeholder="namn@exempel.se">
+                    <input type="email" required class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C]" placeholder="namn@exempel.se">
                 </div>
                 <div class="relative">
                     <label class="block text-sm font-medium text-[#2C3E50] mb-1.5">Lösenord</label>
-                    <input type="password" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C]" placeholder="••••••••">
+                    <input type="password" required class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C]" placeholder="••••••••">
                     <iconify-icon icon="lucide:eye" class="absolute right-3 top-[38px] text-gray-400 cursor-pointer hover:text-gray-600"></iconify-icon>
                 </div>
                 <div class="flex items-center justify-between text-sm">
@@ -498,8 +506,9 @@
                     </label>
                     <a href="#" class="text-[#006B7D] hover:underline">Glömt lösenord?</a>
                 </div>
-                <button onclick="showPage('page-dashboard')" class="w-full bg-[#003D5C] text-white py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition mt-2">Logga in</button>
-            </div>
+                <button type="submit" class="w-full bg-[#003D5C] text-white py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition mt-2">Logga in</button>
+                <p class="text-xs text-gray-500 text-center mt-2">Tips: Använd @admin.se för admin, @kommun.se för socialsekreterare</p>
+            </form>
 
             <div class="mt-8 flex items-center gap-4">
                 <div class="h-px bg-gray-200 flex-1"></div>
@@ -803,7 +812,7 @@
     <!-- ============================================== -->
     <!-- 7. ADMIN PANEL -->
     <!-- ============================================== -->
-    <div id="page-admin" class="app-page hidden min-h-screen bg-[#F8F9FA] flex">
+    <div id="page-admin" class="app-page admin-page hidden min-h-screen bg-[#F8F9FA] flex">
         <aside class="w-64 bg-[#1e293b] text-white flex-col hidden md:flex fixed h-full z-10">
             <div class="p-6 border-b border-gray-700">
                 <div class="flex items-center gap-2 font-bold text-lg">
