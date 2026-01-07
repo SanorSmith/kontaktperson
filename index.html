@@ -615,29 +615,6 @@
         let currentRegion = null;
         let selectedVolunteer = null;
 
-        // Sweden GeoJSON boundary (simplified outline)
-        const swedenGeoJSON = {
-            "type": "Feature",
-            "properties": { "name": "Sweden" },
-            "geometry": {
-                "type": "Polygon",
-                "coordinates": [[
-                    [11.0273, 58.8560], [11.4601, 58.9520], [12.8003, 60.8680], [12.7387, 61.6920],
-                    [12.9088, 61.8040], [12.7881, 62.2480], [13.5519, 62.8670], [13.9040, 64.0180],
-                    [14.4688, 64.3680], [14.5623, 65.3050], [15.0791, 65.8730], [16.0996, 66.8260],
-                    [16.7910, 67.2360], [17.1191, 67.9640], [17.8320, 68.3570], [18.1289, 68.5710],
-                    [18.7988, 68.7180], [19.8789, 68.4070], [20.0459, 69.0640], [20.6455, 69.1060],
-                    [21.9785, 68.6160], [23.5391, 67.9360], [23.9648, 67.4560], [23.6582, 66.8260],
-                    [23.9268, 66.0060], [22.4336, 65.7240], [21.9707, 65.0260], [21.5781, 64.5880],
-                    [20.6455, 63.9820], [19.8789, 63.6090], [18.7988, 62.9840], [18.1289, 62.2480],
-                    [17.8320, 61.8040], [17.1191, 61.4840], [16.7910, 60.8680], [16.0996, 60.5820],
-                    [15.0791, 59.8920], [14.5623, 59.2390], [14.4688, 58.8560], [13.9040, 58.8560],
-                    [13.5519, 58.9520], [12.9088, 58.9520], [12.7881, 58.8560], [12.7387, 58.8560],
-                    [12.8003, 58.8560], [11.4601, 58.8560], [11.0273, 58.8560]
-                ]]
-            }
-        };
-
         // Initialize map centered on Sweden
         const map = L.map('sweden-map', {
             zoomControl: true,
@@ -645,48 +622,22 @@
             dragging: true,
             touchZoom: true,
             minZoom: 5,
-            maxZoom: 10,
-            maxBoundsViscosity: 1.0
-        }).setView([62.5, 16.0], 5);
+            maxZoom: 10
+        }).setView([62.0, 15.0], 5);
 
-        // Set strict bounds to keep map focused on Sweden only
+        // Set max bounds to keep map focused on Sweden
         const swedenBounds = L.latLngBounds(
-            L.latLng(55.0, 10.5),  // Southwest corner
+            L.latLng(55.0, 10.0),  // Southwest corner
             L.latLng(69.5, 24.5)   // Northeast corner
         );
         map.setMaxBounds(swedenBounds);
         map.fitBounds(swedenBounds);
 
-        // Add tile layer with custom styling
+        // Add tile layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
             maxZoom: 10,
-            minZoom: 5,
-            bounds: swedenBounds
-        }).addTo(map);
-
-        // Add Sweden boundary overlay to mask surrounding countries
-        const swedenBoundary = L.geoJSON(swedenGeoJSON, {
-            style: {
-                fillColor: '#F8F9FA',
-                fillOpacity: 0,
-                color: '#003D5C',
-                weight: 3,
-                opacity: 0.8
-            }
-        }).addTo(map);
-
-        // Create inverse mask to hide surrounding countries
-        const worldBounds = [
-            [90, -180], [90, 180], [-90, 180], [-90, -180], [90, -180]
-        ];
-        const swedenCoords = swedenGeoJSON.geometry.coordinates[0];
-        const inverseMask = L.polygon([worldBounds, swedenCoords], {
-            color: 'transparent',
-            fillColor: '#E8F4F8',
-            fillOpacity: 0.95,
-            weight: 0,
-            interactive: false
+            minZoom: 5
         }).addTo(map);
 
         // Add region markers with circles
