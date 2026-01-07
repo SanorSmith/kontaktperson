@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aktivera ditt konto - Kontaktperson Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .password-strength-bar {
+            height: 4px;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        .strength-weak { width: 33%; background: #EF4444; }
+        .strength-medium { width: 66%; background: #F59E0B; }
+        .strength-strong { width: 100%; background: #10B981; }
+    </style>
+</head>
+<body class="bg-[#F8F9FA] min-h-screen">
+    <!-- Header -->
+    <header class="bg-[#003D5C] text-white py-4 shadow-md">
+        <div class="max-w-7xl mx-auto px-6 flex items-center gap-3">
+            <div class="w-10 h-10 rounded bg-white/10 flex items-center justify-center">
+                <iconify-icon icon="lucide:users" width="24"></iconify-icon>
+            </div>
+            <span class="font-semibold text-xl tracking-tight">Kontaktperson Platform</span>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-3xl mx-auto px-6 py-12">
+        <!-- Loading State -->
+        <div id="loading-state" class="bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+            <div class="animate-spin w-12 h-12 border-4 border-[#006B7D] border-t-transparent rounded-full mx-auto mb-4"></div>
+            <p class="text-gray-600">Verifierar inbjudan...</p>
+        </div>
+
+        <!-- Invalid Token State -->
+        <div id="invalid-state" class="hidden bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+            <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <iconify-icon icon="lucide:x-circle" width="32" class="text-red-600"></iconify-icon>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Ogiltig inbjudan</h1>
+            <p class="text-gray-600 mb-6">Denna inbjudningslänk är ogiltig eller har löpt ut.</p>
+            <p class="text-sm text-gray-500 mb-6">Kontakta din administratör för att få en ny inbjudan.</p>
+            <a href="/" class="inline-block bg-[#003D5C] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#002A40] transition">
+                Tillbaka till startsidan
+            </a>
+        </div>
+
+        <!-- Activation Form -->
+        <div id="activation-form" class="hidden">
+            <div class="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
+                <!-- Header -->
+                <div class="bg-gradient-to-r from-[#003D5C] to-[#006B7D] px-8 py-6">
+                    <h1 class="text-2xl font-bold text-white">Välkommen! 👋</h1>
+                    <p class="text-white/90 mt-2">Aktivera ditt konto för Kontaktperson Platform</p>
+                </div>
+
+                <!-- Pre-filled Info -->
+                <div class="p-8 bg-[#E8F4F8] border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-[#003D5C] mb-4">Dina uppgifter</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <p class="text-sm text-gray-600">Namn</p>
+                            <p class="font-medium text-gray-900" id="display-name">-</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">E-post</p>
+                            <p class="font-medium text-gray-900" id="display-email">-</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Kommun</p>
+                            <p class="font-medium text-gray-900" id="display-municipality">-</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Avdelning</p>
+                            <p class="font-medium text-gray-900" id="display-department">-</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Roll</p>
+                            <p class="font-medium text-gray-900" id="display-position">-</p>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600">Behörighetsnivå</p>
+                            <p class="font-medium text-gray-900" id="display-access">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Password Form -->
+                <form id="password-form" class="p-8 space-y-6">
+                    <div>
+                        <h2 class="text-lg font-semibold text-[#003D5C] mb-4">Sätt ditt lösenord</h2>
+                        
+                        <!-- Password Input -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Lösenord <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    required
+                                    minlength="8"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006B7D] pr-12"
+                                    placeholder="Minst 8 tecken"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="togglePasswordVisibility('password')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                >
+                                    <iconify-icon icon="lucide:eye" width="20" id="password-icon"></iconify-icon>
+                                </button>
+                            </div>
+                            
+                            <!-- Password Strength -->
+                            <div class="mt-2">
+                                <div class="h-1 bg-gray-200 rounded-full overflow-hidden">
+                                    <div id="strength-bar" class="password-strength-bar"></div>
+                                </div>
+                                <p id="strength-text" class="text-xs text-gray-600 mt-1"></p>
+                            </div>
+
+                            <!-- Password Requirements -->
+                            <div class="mt-3 space-y-1">
+                                <p class="text-xs font-medium text-gray-700">Lösenordskrav:</p>
+                                <div class="space-y-1">
+                                    <p class="text-xs text-gray-600" id="req-length">
+                                        <span class="inline-block w-4">○</span> Minst 8 tecken
+                                    </p>
+                                    <p class="text-xs text-gray-600" id="req-uppercase">
+                                        <span class="inline-block w-4">○</span> En stor bokstav
+                                    </p>
+                                    <p class="text-xs text-gray-600" id="req-lowercase">
+                                        <span class="inline-block w-4">○</span> En liten bokstav
+                                    </p>
+                                    <p class="text-xs text-gray-600" id="req-number">
+                                        <span class="inline-block w-4">○</span> En siffra
+                                    </p>
+                                    <p class="text-xs text-gray-600" id="req-special">
+                                        <span class="inline-block w-4">○</span> Ett specialtecken (!@#$%^&*)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Bekräfta lösenord <span class="text-red-500">*</span>
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="password"
+                                    id="password-confirm"
+                                    required
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006B7D] pr-12"
+                                    placeholder="Ange lösenordet igen"
+                                />
+                                <button
+                                    type="button"
+                                    onclick="togglePasswordVisibility('password-confirm')"
+                                    class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                >
+                                    <iconify-icon icon="lucide:eye" width="20" id="password-confirm-icon"></iconify-icon>
+                                </button>
+                            </div>
+                            <p id="password-match-error" class="text-red-500 text-sm mt-1 hidden">
+                                Lösenorden matchar inte
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions -->
+                    <div class="space-y-3 pt-4 border-t border-gray-200">
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" id="terms" required class="mt-1 w-4 h-4 text-[#006B7D] border-gray-300 rounded focus:ring-[#006B7D]">
+                            <span class="text-sm text-gray-700">
+                                Jag accepterar 
+                                <a href="/terms" target="_blank" class="text-[#006B7D] hover:underline">användarvillkoren</a> och 
+                                <a href="/privacy" target="_blank" class="text-[#006B7D] hover:underline">integritetspolicyn</a>
+                            </span>
+                        </label>
+
+                        <label class="flex items-start gap-3 cursor-pointer">
+                            <input type="checkbox" id="gdpr" required class="mt-1 w-4 h-4 text-[#006B7D] border-gray-300 rounded focus:ring-[#006B7D]">
+                            <span class="text-sm text-gray-700">
+                                Jag förstår att jag hanterar känsliga personuppgifter och följer GDPR samt min kommuns riktlinjer
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div id="error-message" class="hidden p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <p class="text-red-800 text-sm"></p>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button
+                        type="submit"
+                        id="submit-btn"
+                        class="w-full bg-[#F39C12] text-white py-4 rounded-lg font-semibold text-lg hover:bg-[#E67E22] transition shadow-md hover:shadow-lg disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    >
+                        🔐 Aktivera mitt konto
+                    </button>
+                </form>
+            </div>
+
+            <!-- Help Text -->
+            <div class="mt-6 text-center text-sm text-gray-600">
+                <p>Behöver du hjälp? Kontakta din administratör eller IT-avdelning.</p>
+            </div>
+        </div>
+
+        <!-- Success State -->
+        <div id="success-state" class="hidden bg-white rounded-xl shadow-lg border border-gray-200 p-12 text-center">
+            <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <iconify-icon icon="lucide:check-circle" width="32" class="text-green-600"></iconify-icon>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 mb-2">Kontot aktiverat! 🎉</h1>
+            <p class="text-gray-600 mb-6">Ditt konto har aktiverats och du är nu inloggad.</p>
+            <p class="text-sm text-gray-500 mb-6">Du omdirigeras till din dashboard om några sekunder...</p>
+            <div class="animate-spin w-8 h-8 border-4 border-[#006B7D] border-t-transparent rounded-full mx-auto"></div>
+        </div>
+    </main>
+
+    <script>
+        // Get token from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+
+        let invitationData = null;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!token) {
+                showInvalidState();
+                return;
+            }
+
+            await validateToken();
+        });
+
+        // Validate token
+        async function validateToken() {
+            try {
+                // In production, call your API
+                // const response = await fetch(`/api/validate-invitation?token=${token}`);
+                // const data = await response.json();
+                
+                // Mock validation for demo
+                setTimeout(() => {
+                    // Simulate successful validation
+                    invitationData = {
+                        full_name: 'Anna Andersson',
+                        email: 'anna@example.com',
+                        work_email: 'anna.andersson@stockholm.se',
+                        municipality_name: 'Stockholm',
+                        department: 'Socialförvaltning',
+                        position: 'Socialsekreterare',
+                        access_level: 'viewer'
+                    };
+                    
+                    showActivationForm();
+                }, 1000);
+            } catch (error) {
+                console.error('Validation error:', error);
+                showInvalidState();
+            }
+        }
+
+        function showInvalidState() {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('invalid-state').classList.remove('hidden');
+        }
+
+        function showActivationForm() {
+            document.getElementById('loading-state').classList.add('hidden');
+            document.getElementById('activation-form').classList.remove('hidden');
+            
+            // Populate form with invitation data
+            document.getElementById('display-name').textContent = invitationData.full_name;
+            document.getElementById('display-email').textContent = invitationData.email;
+            document.getElementById('display-municipality').textContent = invitationData.municipality_name;
+            document.getElementById('display-department').textContent = invitationData.department;
+            document.getElementById('display-position').textContent = invitationData.position;
+            
+            const accessLevelText = {
+                viewer: 'Läsare',
+                approver: 'Godkännare',
+                admin: 'Administratör'
+            };
+            document.getElementById('display-access').textContent = accessLevelText[invitationData.access_level] || invitationData.access_level;
+        }
+
+        // Toggle password visibility
+        function togglePasswordVisibility(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(inputId + '-icon');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.setAttribute('icon', 'lucide:eye-off');
+            } else {
+                input.type = 'password';
+                icon.setAttribute('icon', 'lucide:eye');
+            }
+        }
+
+        // Password strength checker
+        document.getElementById('password')?.addEventListener('input', (e) => {
+            const password = e.target.value;
+            checkPasswordStrength(password);
+        });
+
+        function checkPasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+            };
+
+            // Update requirement indicators
+            updateRequirement('req-length', requirements.length);
+            updateRequirement('req-uppercase', requirements.uppercase);
+            updateRequirement('req-lowercase', requirements.lowercase);
+            updateRequirement('req-number', requirements.number);
+            updateRequirement('req-special', requirements.special);
+
+            // Calculate strength
+            const metRequirements = Object.values(requirements).filter(Boolean).length;
+            const strengthBar = document.getElementById('strength-bar');
+            const strengthText = document.getElementById('strength-text');
+
+            if (metRequirements === 5) {
+                strengthBar.className = 'password-strength-bar strength-strong';
+                strengthText.textContent = 'Starkt lösenord ✓';
+                strengthText.className = 'text-xs text-green-600 mt-1 font-medium';
+            } else if (metRequirements >= 3) {
+                strengthBar.className = 'password-strength-bar strength-medium';
+                strengthText.textContent = 'Medel lösenord';
+                strengthText.className = 'text-xs text-orange-600 mt-1 font-medium';
+            } else {
+                strengthBar.className = 'password-strength-bar strength-weak';
+                strengthText.textContent = 'Svagt lösenord';
+                strengthText.className = 'text-xs text-red-600 mt-1 font-medium';
+            }
+        }
+
+        function updateRequirement(id, met) {
+            const element = document.getElementById(id);
+            if (met) {
+                element.innerHTML = element.innerHTML.replace('○', '✓');
+                element.classList.remove('text-gray-600');
+                element.classList.add('text-green-600', 'font-medium');
+            } else {
+                element.innerHTML = element.innerHTML.replace('✓', '○');
+                element.classList.remove('text-green-600', 'font-medium');
+                element.classList.add('text-gray-600');
+            }
+        }
+
+        // Check password match
+        document.getElementById('password-confirm')?.addEventListener('input', (e) => {
+            const password = document.getElementById('password').value;
+            const confirm = e.target.value;
+            const errorElement = document.getElementById('password-match-error');
+            
+            if (confirm && password !== confirm) {
+                errorElement.classList.remove('hidden');
+            } else {
+                errorElement.classList.add('hidden');
+            }
+        });
+
+        // Form submission
+        document.getElementById('password-form')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const confirm = document.getElementById('password-confirm').value;
+            const terms = document.getElementById('terms').checked;
+            const gdpr = document.getElementById('gdpr').checked;
+            
+            // Validate
+            if (password !== confirm) {
+                showError('Lösenorden matchar inte');
+                return;
+            }
+            
+            if (!terms || !gdpr) {
+                showError('Du måste acceptera villkoren för att fortsätta');
+                return;
+            }
+            
+            // Check password strength
+            const requirements = {
+                length: password.length >= 8,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                number: /[0-9]/.test(password),
+                special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+            };
+            
+            if (!Object.values(requirements).every(Boolean)) {
+                showError('Lösenordet uppfyller inte alla krav');
+                return;
+            }
+            
+            // Submit
+            const submitBtn = document.getElementById('submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Aktiverar konto...';
+            
+            try {
+                // In production, call your API
+                // const response = await fetch('/api/accept-invitation', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ token, password })
+                // });
+                
+                // Mock success for demo
+                setTimeout(() => {
+                    showSuccess();
+                }, 1500);
+            } catch (error) {
+                console.error('Activation error:', error);
+                showError('Ett fel uppstod. Försök igen.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🔐 Aktivera mitt konto';
+            }
+        });
+
+        function showError(message) {
+            const errorElement = document.getElementById('error-message');
+            errorElement.querySelector('p').textContent = message;
+            errorElement.classList.remove('hidden');
+            
+            setTimeout(() => {
+                errorElement.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showSuccess() {
+            document.getElementById('activation-form').classList.add('hidden');
+            document.getElementById('success-state').classList.remove('hidden');
+            
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
