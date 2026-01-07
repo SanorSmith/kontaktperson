@@ -1,0 +1,469 @@
+/* Kontaktperson Platform Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #F8F9FA;
+    color: #2C3E50;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #F1F1F1;
+}
+::-webkit-scrollbar-thumb {
+    background: #CBD5E1;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #94A3B8;
+}
+
+/* Range Slider Customization */
+input[type=range] {
+    -webkit-appearance: none; 
+    background: transparent; 
+}
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    background: #003D5C;
+    cursor: pointer;
+    margin-top: -8px; 
+    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: #E2E8F0;
+    border-radius: 2px;
+}
+
+/* Custom Checkbox */
+.custom-checkbox:checked {
+    background-color: #003D5C;
+    border-color: #003D5C;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+}
+
+/* Hide Number Input Arrows */
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none; 
+    margin: 0; 
+}
+
+/* Smooth Fade */
+.fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Floating Demo Menu */
+.group:hover .group-hover\:flex {
+    display: flex;
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Landing Page Styles */
+.header-nav {
+    background: #003D5C;
+    border-bottom: 1px solid #004e75;
+}
+
+.hero-section {
+    background: #003D5C;
+    position: relative;
+    overflow: hidden;
+}
+
+.hero-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.05;
+    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');
+}
+
+.feature-card {
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Registration Form Styles */
+.step-indicator {
+    position: relative;
+}
+
+.step-line {
+    height: 1px;
+    background: #E2E8F0;
+    transition: background-color 0.3s ease;
+}
+
+.step-line.active {
+    background: #003D5C;
+}
+
+.step-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 10;
+}
+
+.step-circle.completed {
+    background: #003D5C;
+    color: white;
+}
+
+.step-circle.active {
+    background: #F39C12;
+    color: white;
+}
+
+.step-circle.pending {
+    background: #E2E8F0;
+    color: #64748B;
+}
+
+/* Map Search Styles */
+.search-sidebar {
+    background: white;
+    border-right: 1px solid #E2E8F0;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.result-card {
+    transition: box-shadow 0.2s ease;
+}
+
+.result-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.map-container {
+    background: #E8F4F8;
+    position: relative;
+}
+
+.map-pin {
+    transition: transform 0.2s ease;
+}
+
+.map-pin:hover {
+    transform: scale(1.1);
+}
+
+/* Dashboard Styles */
+.dashboard-sidebar {
+    background: #003D5C;
+    color: white;
+    position: fixed;
+    height: 100vh;
+    z-index: 10;
+}
+
+.nav-item {
+    transition: all 0.2s ease;
+}
+
+.nav-item:hover {
+    background: rgba(255,255,255,0.05);
+    color: white;
+}
+
+.nav-item.active {
+    background: rgba(255,255,255,0.1);
+    color: white;
+}
+
+.stat-card {
+    transition: transform 0.2s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Admin Panel Styles */
+.admin-sidebar {
+    background: #1e293b;
+    color: white;
+}
+
+.status-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.status-indicator.online {
+    background: #10B981;
+    animation: pulse 2s infinite;
+}
+
+.status-indicator.warning {
+    background: #F59E0B;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Settings Page Styles */
+.settings-tabs {
+    background: #F8F9FA;
+}
+
+.tab-button {
+    transition: all 0.2s ease;
+}
+
+.tab-button.active {
+    background: white;
+    color: #003D5C;
+    border-top: 2px solid #003D5C;
+}
+
+/* FAQ Accordion Styles */
+.accordion-item {
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.accordion-button {
+    transition: background-color 0.2s ease;
+}
+
+.accordion-button:hover {
+    background: #F8F9FA;
+}
+
+.accordion-content {
+    border-top: 1px solid #F1F5F9;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-sidebar,
+    .admin-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+    
+    .dashboard-sidebar.open,
+    .admin-sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main-content {
+        margin-left: 0 !important;
+        padding: 1rem;
+    }
+    
+    .hero-section {
+        padding: 3rem 1rem;
+    }
+    
+    .feature-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+/* Utility Classes */
+.shadow-custom {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.border-custom {
+    border: 1px solid #E2E8F0;
+}
+
+.text-primary {
+    color: #003D5C;
+}
+
+.text-secondary {
+    color: #2C3E50;
+}
+
+.text-accent {
+    color: #F39C12;
+}
+
+.bg-primary {
+    background: #003D5C;
+}
+
+.bg-accent {
+    background: #F39C12;
+}
+
+.bg-light {
+    background: #E8F4F8;
+}
+
+/* Form Styles */
+.form-input {
+    background: #F8F9FA;
+    border: 1px solid #E2E8F0;
+    border-radius: 8px;
+    padding: 0.625rem 1rem;
+    transition: all 0.2s ease;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #003D5C;
+    box-shadow: 0 0 0 3px rgba(0,61,92,0.1);
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2C3E50;
+    margin-bottom: 0.375rem;
+    display: block;
+}
+
+/* Button Styles */
+.btn-primary {
+    background: #003D5C;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background: #002A40;
+    box-shadow: 0 4px 12px rgba(0,61,92,0.2);
+}
+
+.btn-accent {
+    background: #F39C12;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-accent:hover {
+    background: #E67E22;
+    box-shadow: 0 4px 12px rgba(243,156,18,0.2);
+}
+
+.btn-outline {
+    background: transparent;
+    color: #003D5C;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border: 1px solid #003D5C;
+    cursor: pointer;
+}
+
+.btn-outline:hover {
+    background: #003D5C;
+    color: white;
+}
+
+/* Card Styles */
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid #E2E8F0;
+    padding: 2rem;
+}
+
+.card-hover {
+    transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+/* Badge Styles */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge-success {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.badge-warning {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.badge-info {
+    background: #E8F4F8;
+    color: #006B7D;
+}
+
+.badge-gray {
+    background: #F3F4F6;
+    color: #374151;
+}

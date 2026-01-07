@@ -1,0 +1,1113 @@
+<html lang="sv"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kontaktperson Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="antialiased min-h-screen relative">
+
+    <script src="script.js"></script>
+
+    <!-- FLOATING DEMO MENU -->
+    <div class="fixed bottom-6 right-6 z-50 group">
+        <div class="bg-white shadow-xl rounded-xl border border-gray-200 p-2 hidden group-hover:flex flex-col gap-2 mb-2 w-48 animate-fade-in-up absolute bottom-12 right-0">
+            <div class="text-[10px] uppercase tracking-wider font-bold text-gray-400 px-2 py-1">Pages</div>
+            <button onclick="showPage('page-landing')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">1. Landing Page</button>
+            <button onclick="showPage('page-register')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">2. Volunteer Register</button>
+            <button onclick="showPage('page-login')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">3. Login</button>
+            <button onclick="showPage('page-search')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">4. Map Search</button>
+            <button onclick="showPage('page-detail')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">5. Volunteer Detail</button>
+            <button onclick="showPage('page-dashboard')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">6. Social Worker Dash</button>
+            <button onclick="showPage('page-admin')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">7. Admin Panel</button>
+            <button onclick="showPage('page-settings')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">8. Settings</button>
+            <button onclick="showPage('page-faq')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">9. FAQ</button>
+        </div>
+        <button class="bg-[#003D5C] text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center hover:bg-[#002A40] transition-colors">
+            <iconify-icon icon="lucide:menu" width="24" stroke-width="1.5"></iconify-icon>
+        </button>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 1. LANDING PAGE -->
+    <!-- ============================================== -->
+    <div id="page-landing" class="app-page">
+        <!-- Header -->
+        <header class="bg-[#003D5C] text-white py-4 border-b border-[#004e75]">
+            <div class="max-w-[1280px] mx-auto px-6 flex justify-between items-center">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="showPage('page-landing')">
+                    <div class="w-8 h-8 rounded bg-white/10 flex items-center justify-center text-white">
+                        <iconify-icon icon="lucide:users" width="20"></iconify-icon>
+                    </div>
+                    <span class="font-semibold text-lg tracking-tight">Kontaktperson Platform</span>
+                </div>
+                
+                <nav class="hidden md:flex gap-8 text-sm font-medium text-white/90">
+                    <a href="#" class="hover:text-white transition">Om oss</a>
+                    <a href="#" class="hover:text-white transition">För Volontärer</a>
+                    <a href="#" class="hover:text-white transition">För Socialsekreterare</a>
+                </nav>
+
+                <div class="flex gap-3">
+                    <button onclick="showPage('page-login')" class="bg-white text-[#003D5C] px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition">
+                        Logga in
+                    </button>
+                    <button onclick="showPage('page-register')" class="bg-[#F39C12] text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[#E67E22] hover:shadow-lg transition shadow-md">
+                        Registrera
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero -->
+        <section class="bg-[#003D5C] text-white pt-20 pb-28 relative overflow-hidden">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5"></div>
+            <div class="max-w-[1280px] mx-auto px-6 relative z-10 grid md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <h1 class="text-4xl md:text-[44px] font-bold leading-[1.1] tracking-tight">Hitta rätt kontaktperson för dina klienter</h1>
+                    <p class="text-lg text-[#E8F4F8]/80 max-w-lg leading-relaxed">En säker plattform som kopplar samman kommuner med engagerade volontärer för att skapa meningsfulla relationer.</p>
+                    
+                    <div class="flex flex-wrap gap-4 pt-4">
+                        <button onclick="showPage('page-register')" class="bg-[#F39C12] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[#E67E22] hover:shadow-lg transition flex items-center gap-2">
+                            Registrera som volontär
+                            <iconify-icon icon="lucide:arrow-right" width="18"></iconify-icon>
+                        </button>
+                        <button onclick="showPage('page-search')" class="bg-transparent border border-white/30 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition flex items-center gap-2">
+                            <iconify-icon icon="lucide:search" width="18"></iconify-icon>
+                            Sök kontaktpersoner
+                        </button>
+                    </div>
+                </div>
+                <div class="hidden md:flex justify-end relative">
+                    <!-- Illustration Placeholder -->
+                    <div class="w-full max-w-md aspect-square bg-[#004e75] rounded-2xl p-8 relative shadow-2xl overflow-hidden group">
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex gap-4">
+                             <div class="w-24 h-24 rounded-full bg-[#E8F4F8] border-4 border-[#003D5C] shadow-lg flex items-center justify-center text-[#003D5C]">
+                                <iconify-icon icon="lucide:user" width="40"></iconify-icon>
+                             </div>
+                             <div class="w-24 h-24 rounded-full bg-[#F39C12] border-4 border-[#003D5C] shadow-lg flex items-center justify-center text-white -ml-8 z-10">
+                                <iconify-icon icon="lucide:heart-handshake" width="40"></iconify-icon>
+                             </div>
+                        </div>
+                        <div class="absolute bottom-6 left-6 right-6 bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="w-2 h-2 rounded-full bg-green-400"></div>
+                                <span class="text-xs font-medium uppercase tracking-wide opacity-80">Matchning lyckad</span>
+                            </div>
+                            <div class="h-1.5 w-3/4 bg-white/20 rounded mb-2"></div>
+                            <div class="h-1.5 w-1/2 bg-white/20 rounded"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="py-24 bg-white">
+            <div class="max-w-[1280px] mx-auto px-6">
+                <div class="text-center mb-16">
+                    <h2 class="text-[#003D5C] text-3xl font-bold tracking-tight mb-4">Hur det fungerar</h2>
+                    <p class="text-[#2C3E50]/70">En enkel process för säker och trygg matchning</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Card 1 -->
+                    <div class="bg-white p-8 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 bg-[#E8F4F8] text-[#003D5C] rounded-lg flex items-center justify-center mb-6">
+                            <iconify-icon icon="lucide:file-text" width="24"></iconify-icon>
+                        </div>
+                        <h3 class="text-xl font-semibold text-[#003D5C] mb-3">Registrera profil</h3>
+                        <p class="text-[#2C3E50]/70 leading-relaxed text-sm">Volontärer skapar en detaljerad profil och anger sina intressen och tillgänglighet.</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="bg-white p-8 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 bg-[#E8F4F8] text-[#003D5C] rounded-lg flex items-center justify-center mb-6">
+                            <iconify-icon icon="lucide:shield-check" width="24"></iconify-icon>
+                        </div>
+                        <h3 class="text-xl font-semibold text-[#003D5C] mb-3">Granskas av kommun</h3>
+                        <p class="text-[#2C3E50]/70 leading-relaxed text-sm">Socialsekreterare granskar ansökningar, tar referenser och genomför bakgrundskontroller.</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="bg-white p-8 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 hover:-translate-y-1 transition-transform duration-300">
+                        <div class="w-12 h-12 bg-[#E8F4F8] text-[#003D5C] rounded-lg flex items-center justify-center mb-6">
+                            <iconify-icon icon="lucide:users" width="24"></iconify-icon>
+                        </div>
+                        <h3 class="text-xl font-semibold text-[#003D5C] mb-3">Matcha med klienter</h3>
+                        <p class="text-[#2C3E50]/70 leading-relaxed text-sm">Hitta rätt kontaktperson baserat på gemensamma intressen, språk och behov.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Social Worker Section -->
+        <section class="py-24 bg-[#E8F4F8]">
+            <div class="max-w-[1280px] mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+                <div>
+                    <h2 class="text-3xl font-bold text-[#003D5C] tracking-tight mb-6">För socialsekreterare</h2>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start gap-3">
+                            <iconify-icon icon="lucide:check-circle-2" class="text-[#27AE60] mt-1" width="20"></iconify-icon>
+                            <span class="text-[#2C3E50]">Sökbart register över tillgängliga volontärer</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <iconify-icon icon="lucide:check-circle-2" class="text-[#27AE60] mt-1" width="20"></iconify-icon>
+                            <span class="text-[#2C3E50]">Enkel hantering av bakgrundskontroller</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <iconify-icon icon="lucide:check-circle-2" class="text-[#27AE60] mt-1" width="20"></iconify-icon>
+                            <span class="text-[#2C3E50]">Kartbaserad sökning för närhet</span>
+                        </li>
+                    </ul>
+                    <button onclick="showPage('page-dashboard')" class="bg-[#003D5C] text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition">Läs mer</button>
+                </div>
+                <div class="bg-white rounded-xl shadow-xl p-4 rotate-2 hover:rotate-0 transition duration-500">
+                    <!-- Fake Map UI -->
+                    <div class="bg-gray-100 rounded h-64 w-full relative overflow-hidden flex items-center justify-center">
+                         <div class="absolute inset-0 bg-[#E8F4F8] opacity-50"></div>
+                         <iconify-icon icon="lucide:map" class="text-gray-300" width="100"></iconify-icon>
+                         <!-- Pins -->
+                         <div class="absolute top-10 left-10 text-[#F39C12] animate-bounce"><iconify-icon icon="lucide:map-pin" width="24"></iconify-icon></div>
+                         <div class="absolute top-20 right-20 text-[#003D5C]"><iconify-icon icon="lucide:map-pin" width="24"></iconify-icon></div>
+                         <div class="absolute bottom-12 left-1/2 text-[#F39C12]"><iconify-icon icon="lucide:map-pin" width="24"></iconify-icon></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Volunteer Section -->
+        <section class="py-24 bg-white">
+            <div class="max-w-[1280px] mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+                 <div class="order-2 md:order-1 bg-gray-50 rounded-xl shadow-xl p-6 -rotate-2 hover:rotate-0 transition duration-500 border border-gray-100">
+                    <!-- Profile Mockup -->
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-16 h-16 rounded-full bg-gray-200"></div>
+                        <div>
+                            <div class="h-4 w-32 bg-gray-200 rounded mb-2"></div>
+                            <div class="h-3 w-20 bg-gray-100 rounded"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <div class="h-3 w-full bg-gray-100 rounded"></div>
+                        <div class="h-3 w-5/6 bg-gray-100 rounded"></div>
+                        <div class="h-3 w-4/6 bg-gray-100 rounded"></div>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2">
+                    <h2 class="text-3xl font-bold text-[#003D5C] tracking-tight mb-6">Bli kontaktperson</h2>
+                    <ul class="space-y-4 mb-8">
+                        <li class="flex items-start gap-3">
+                            <iconify-icon icon="lucide:check-circle-2" class="text-[#27AE60] mt-1" width="20"></iconify-icon>
+                            <span class="text-[#2C3E50]">Gör skillnad i någons vardag</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <iconify-icon icon="lucide:check-circle-2" class="text-[#27AE60] mt-1" width="20"></iconify-icon>
+                            <span class="text-[#2C3E50]">Få stöd och utbildning av kommunen</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <iconify-icon icon="lucide:check-circle-2" class="text-[#27AE60] mt-1" width="20"></iconify-icon>
+                            <span class="text-[#2C3E50]">Flexibelt engagemang</span>
+                        </li>
+                    </ul>
+                    <button onclick="showPage('page-register')" class="bg-[#F39C12] text-white px-6 py-3 rounded-lg font-medium hover:shadow-lg transition">Ansök här</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="bg-[#F8F9FA] pt-16 pb-8 border-t border-gray-200">
+            <div class="max-w-[1280px] mx-auto px-6 grid md:grid-cols-3 gap-12 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-4 text-[#003D5C]">
+                        <iconify-icon icon="lucide:users" width="20"></iconify-icon>
+                        <span class="font-bold tracking-tight">Kontaktperson Platform</span>
+                    </div>
+                    <p class="text-sm text-[#2C3E50]/60 leading-relaxed">
+                        Sveriges ledande plattform för att koppla samman kommuner med engagerade medborgare.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-[#003D5C] mb-4">Snabblänkar</h4>
+                    <ul class="space-y-2 text-sm text-[#2C3E50]/70">
+                        <li><a href="#" class="hover:text-[#006B7D]">Integritetspolicy</a></li>
+                        <li><a href="#" class="hover:text-[#006B7D]">Villkor</a></li>
+                        <li><button onclick="showPage('page-faq')" class="hover:text-[#006B7D]">FAQ</button></li>
+                        <li><a href="#" class="hover:text-[#006B7D]">Kontakt</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-[#003D5C] mb-4">Kontakta oss</h4>
+                    <div class="space-y-3 text-sm text-[#2C3E50]/70">
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="lucide:mail" width="16"></iconify-icon>
+                            support@kontaktperson.se
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <iconify-icon icon="lucide:phone" width="16"></iconify-icon>
+                            08-123 45 67
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="max-w-[1280px] mx-auto px-6 pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center text-xs text-[#2C3E50]/50">
+                <p>© 2023 Kontaktperson Platform AB. Alla rättigheter förbehållna.</p>
+                <div class="flex gap-4 mt-4 md:mt-0">
+                    <iconify-icon icon="lucide:facebook" width="16" class="cursor-pointer hover:text-[#003D5C]"></iconify-icon>
+                    <iconify-icon icon="lucide:twitter" width="16" class="cursor-pointer hover:text-[#003D5C]"></iconify-icon>
+                    <iconify-icon icon="lucide:linkedin" width="16" class="cursor-pointer hover:text-[#003D5C]"></iconify-icon>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 2. VOLUNTEER REGISTRATION (Multi-step) -->
+    <!-- ============================================== -->
+    <div id="page-register" class="app-page hidden min-h-screen bg-[#F8F9FA] py-12">
+        <div class="max-w-3xl mx-auto px-6">
+            <div class="mb-8 cursor-pointer text-[#006B7D] flex items-center gap-2 text-sm font-medium hover:underline" onclick="showPage('page-landing')">
+                <iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon> Tillbaka till startsidan
+            </div>
+
+            <!-- Steps Indicator -->
+            <div class="mb-10 flex justify-between relative px-2">
+                <div class="absolute top-1/2 left-0 w-full h-0.5 -translate-y-1/2 flex px-4">
+                    <div id="step-line-1" class="w-1/4 h-full bg-[#003D5C]"></div>
+                    <div id="step-line-2" class="w-1/4 h-full bg-gray-200"></div>
+                    <div id="step-line-3" class="w-1/4 h-full bg-gray-200"></div>
+                    <div id="step-line-4" class="w-1/4 h-full bg-gray-200"></div>
+                </div>
+                
+                <div class="relative flex flex-col items-center gap-2">
+                    <div id="step-circle-1" class="w-8 h-8 rounded-full bg-[#F39C12] text-white flex items-center justify-center text-xs font-semibold z-10">1</div>
+                    <span class="text-xs font-medium text-[#2C3E50]">Grundinfo</span>
+                </div>
+                <div class="relative flex flex-col items-center gap-2">
+                    <div id="step-circle-2" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-xs font-semibold z-10">2</div>
+                    <span class="text-xs font-medium text-[#2C3E50]">Om dig</span>
+                </div>
+                <div class="relative flex flex-col items-center gap-2">
+                    <div id="step-circle-3" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-xs font-semibold z-10">3</div>
+                    <span class="text-xs font-medium text-[#2C3E50]">Erfarenhet</span>
+                </div>
+                <div class="relative flex flex-col items-center gap-2">
+                    <div id="step-circle-4" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-xs font-semibold z-10">4</div>
+                    <span class="text-xs font-medium text-[#2C3E50]">Bakgrund</span>
+                </div>
+                <div class="relative flex flex-col items-center gap-2">
+                    <div id="step-circle-5" class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-xs font-semibold z-10">5</div>
+                    <span class="text-xs font-medium text-[#2C3E50]">Slutför</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.06)] p-8 border border-gray-100 min-h-[400px]">
+                
+                <!-- STEP 1 -->
+                <div id="step-content-1" class="reg-step-content space-y-6 fade-in">
+                    <h2 class="text-2xl font-semibold text-[#003D5C] tracking-tight">Grundläggande information</h2>
+                    <div class="grid gap-5">
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-medium text-[#2C3E50]">Fullständigt namn</label>
+                            <input type="text" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition" placeholder="T.ex. Anna Andersson">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-medium text-[#2C3E50]">E-postadress</label>
+                            <input type="email" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition" placeholder="namn@exempel.se">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-medium text-[#2C3E50]">Telefonnummer</label>
+                            <input type="tel" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition" placeholder="070-123 45 67">
+                        </div>
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-medium text-[#2C3E50]">Välj din kommun</label>
+                            <select class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition text-[#2C3E50]">
+                                <option>Stockholm</option>
+                                <option>Göteborg</option>
+                                <option>Malmö</option>
+                                <option>Uppsala</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex justify-end pt-4">
+                        <button onclick="showStep(2)" class="bg-[#F39C12] text-white px-6 py-2.5 rounded-lg font-medium shadow-sm hover:shadow-md transition">Nästa</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div id="step-content-2" class="reg-step-content space-y-6 hidden fade-in">
+                    <h2 class="text-2xl font-semibold text-[#003D5C] tracking-tight">Berätta om dig själv</h2>
+                    <div class="grid gap-5">
+                        <div class="flex gap-6">
+                            <div class="space-y-1.5 w-32">
+                                <label class="block text-sm font-medium text-[#2C3E50]">Ålder</label>
+                                <input type="number" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C]" placeholder="30">
+                            </div>
+                            <div class="space-y-1.5 flex-1">
+                                <label class="block text-sm font-medium text-[#2C3E50] mb-2">Kön</label>
+                                <div class="flex gap-4">
+                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="sex" class="accent-[#003D5C]"> Man</label>
+                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="sex" class="accent-[#003D5C]"> Kvinna</label>
+                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="sex" class="accent-[#003D5C]"> Annat</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-[#2C3E50]">Språk du talar</label>
+                            <div class="flex flex-wrap gap-3">
+                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded border-gray-300"> <span class="text-sm">Svenska</span></label>
+                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded border-gray-300"> <span class="text-sm">Engelska</span></label>
+                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded border-gray-300"> <span class="text-sm">Arabiska</span></label>
+                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded border-gray-300"> <span class="text-sm">Spanska</span></label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="block text-sm font-medium text-[#2C3E50]">Intressen och hobbies</label>
+                            <textarea class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] h-24 resize-none" placeholder="T.ex. sport, matlagning, litteratur..."></textarea>
+                        </div>
+                    </div>
+                    <div class="flex justify-between pt-4">
+                        <button onclick="showStep(1)" class="text-[#003D5C] px-6 py-2.5 rounded-lg font-medium border border-gray-200 bg-white hover:bg-gray-50 transition">Tillbaka</button>
+                        <button onclick="showStep(3)" class="bg-[#F39C12] text-white px-6 py-2.5 rounded-lg font-medium shadow-sm hover:shadow-md transition">Nästa</button>
+                    </div>
+                </div>
+
+                 <!-- STEP 3 -->
+                 <div id="step-content-3" class="reg-step-content space-y-6 hidden fade-in">
+                    <h2 class="text-2xl font-semibold text-[#003D5C] tracking-tight">Erfarenhet &amp; Tillgänglighet</h2>
+                    <div class="grid gap-5">
+                         <div class="space-y-1.5">
+                            <label class="block text-sm font-medium text-[#2C3E50]">Tidigare erfarenhet</label>
+                            <textarea class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] h-24 resize-none" placeholder="Beskriv eventuellt tidigare socialt arbete..."></textarea>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-sm font-medium text-[#2C3E50]">Jag vill arbeta med:</label>
+                            <div class="flex flex-wrap gap-3">
+                                <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded"> Barn</label>
+                                <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded"> Ungdomar</label>
+                                <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded"> Vuxna</label>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                             <label class="block text-sm font-medium text-[#2C3E50]">Timmar per vecka: <span class="text-[#006B7D] font-bold ml-1">4 tim</span></label>
+                             <input type="range" min="1" max="20" value="4" class="w-full">
+                             <div class="flex justify-between text-xs text-gray-400">
+                                <span>1 tim</span>
+                                <span>20 tim</span>
+                             </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between pt-4">
+                        <button onclick="showStep(2)" class="text-[#003D5C] px-6 py-2.5 rounded-lg font-medium border border-gray-200 bg-white hover:bg-gray-50 transition">Tillbaka</button>
+                        <button onclick="showStep(4)" class="bg-[#F39C12] text-white px-6 py-2.5 rounded-lg font-medium shadow-sm hover:shadow-md transition">Nästa</button>
+                    </div>
+                </div>
+
+                <!-- STEP 4 -->
+                 <div id="step-content-4" class="reg-step-content space-y-6 hidden fade-in">
+                    <h2 class="text-2xl font-semibold text-[#003D5C] tracking-tight">Bakgrund &amp; Samtycke</h2>
+                    <div class="grid gap-5">
+                        <div class="bg-[#E8F4F8] p-4 rounded-lg border border-[#006B7D]/20 flex gap-3">
+                            <iconify-icon icon="lucide:info" class="text-[#006B7D] mt-0.5" width="20"></iconify-icon>
+                            <p class="text-sm text-[#2C3E50]">För att säkerställa trygghet för alla inblandade krävs en bakgrundskontroll via belastningsregistret.</p>
+                        </div>
+
+                        <label class="flex items-start gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+                            <input type="checkbox" class="custom-checkbox w-5 h-5 rounded mt-0.5 text-[#003D5C]" checked="">
+                            <span class="text-sm">Jag samtycker till bakgrundskontroll och att kommunen får behandla mina personuppgifter enligt GDPR.</span>
+                        </label>
+
+                        <div class="space-y-3 pt-2">
+                            <label class="block text-sm font-medium text-[#2C3E50]">Referenser</label>
+                            <input type="text" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 mb-2 text-sm" placeholder="Referens 1: Namn och telefon">
+                            <input type="text" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 text-sm" placeholder="Referens 2: Namn och telefon">
+                        </div>
+                    </div>
+                    <div class="flex justify-between pt-4">
+                        <button onclick="showStep(3)" class="text-[#003D5C] px-6 py-2.5 rounded-lg font-medium border border-gray-200 bg-white hover:bg-gray-50 transition">Tillbaka</button>
+                        <button onclick="showStep(5)" class="bg-[#F39C12] text-white px-6 py-2.5 rounded-lg font-medium shadow-sm hover:shadow-md transition">Nästa</button>
+                    </div>
+                </div>
+
+                <!-- STEP 5 -->
+                 <div id="step-content-5" class="reg-step-content space-y-6 hidden fade-in">
+                    <h2 class="text-2xl font-semibold text-[#003D5C] tracking-tight">Granska din ansökan</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="bg-[#F8F9FA] p-4 rounded-lg border border-gray-200 relative">
+                            <h3 class="text-xs font-bold uppercase text-gray-400 mb-2">Grundinfo</h3>
+                            <p class="text-sm font-medium">Anna Andersson</p>
+                            <p class="text-sm text-gray-500">anna@exempel.se</p>
+                            <button onclick="showStep(1)" class="absolute top-4 right-4 text-xs text-[#F39C12] font-semibold hover:underline">Redigera</button>
+                        </div>
+                        <div class="bg-[#F8F9FA] p-4 rounded-lg border border-gray-200 relative">
+                            <h3 class="text-xs font-bold uppercase text-gray-400 mb-2">Om dig</h3>
+                            <p class="text-sm text-gray-500">30 år, Kvinna. Svenska, Engelska.</p>
+                            <button onclick="showStep(2)" class="absolute top-4 right-4 text-xs text-[#F39C12] font-semibold hover:underline">Redigera</button>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-between pt-4 items-center">
+                        <button onclick="showStep(4)" class="text-[#003D5C] px-6 py-2.5 rounded-lg font-medium border border-gray-200 bg-white hover:bg-gray-50 transition">Tillbaka</button>
+                        <button onclick="alert('Ansökan skickad! (Demo)'); showPage('page-landing')" class="bg-[#F39C12] text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl hover:bg-[#E67E22] transition w-full md:w-auto">Skicka ansökan</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 3. LOGIN PAGE -->
+    <!-- ============================================== -->
+    <div id="page-login" class="app-page hidden min-h-screen bg-[#F8F9FA] flex items-center justify-center p-6">
+        <div class="bg-white w-full max-w-[450px] rounded-xl shadow-lg border border-gray-100 p-8">
+            <div class="flex justify-center mb-6 text-[#003D5C]">
+                <iconify-icon icon="lucide:users" width="40"></iconify-icon>
+            </div>
+            <h1 class="text-2xl font-bold text-[#003D5C] text-center mb-8 tracking-tight">Logga in</h1>
+            
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-[#2C3E50] mb-1.5">E-postadress</label>
+                    <input type="email" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C]" placeholder="namn@exempel.se">
+                </div>
+                <div class="relative">
+                    <label class="block text-sm font-medium text-[#2C3E50] mb-1.5">Lösenord</label>
+                    <input type="password" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C]" placeholder="••••••••">
+                    <iconify-icon icon="lucide:eye" class="absolute right-3 top-[38px] text-gray-400 cursor-pointer hover:text-gray-600"></iconify-icon>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" class="custom-checkbox rounded border-gray-300"> Kom ihåg mig
+                    </label>
+                    <a href="#" class="text-[#006B7D] hover:underline">Glömt lösenord?</a>
+                </div>
+                <button onclick="showPage('page-dashboard')" class="w-full bg-[#003D5C] text-white py-3 rounded-lg font-semibold shadow-md hover:shadow-lg transition mt-2">Logga in</button>
+            </div>
+
+            <div class="mt-8 flex items-center gap-4">
+                <div class="h-px bg-gray-200 flex-1"></div>
+                <span class="text-xs text-gray-400">ELLER</span>
+                <div class="h-px bg-gray-200 flex-1"></div>
+            </div>
+
+            <div class="text-center mt-6">
+                <a href="#" onclick="showPage('page-register')" class="text-[#006B7D] text-sm font-medium hover:underline">Har du inget konto? Registrera dig här</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 4. MAP SEARCH INTERFACE -->
+    <!-- ============================================== -->
+    <div id="page-search" class="app-page hidden h-screen flex flex-col md:flex-row overflow-hidden">
+        <!-- Sidebar -->
+        <div class="w-full md:w-[40%] lg:w-[35%] bg-white border-r border-gray-200 flex flex-col h-full z-20 shadow-xl">
+            <!-- Search Header -->
+            <div class="p-6 border-b border-gray-100">
+                <div class="flex items-center gap-2 mb-4 cursor-pointer" onclick="showPage('page-landing')">
+                     <iconify-icon icon="lucide:arrow-left" class="text-gray-400"></iconify-icon>
+                     <h1 class="text-xl font-bold text-[#003D5C]">Sök kontaktpersoner</h1>
+                </div>
+                <div class="relative">
+                    <input type="text" placeholder="Sök efter namn, kommun..." class="w-full pl-10 pr-4 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#003D5C]">
+                    <iconify-icon icon="lucide:search" class="absolute left-3 top-3 text-gray-400" width="16"></iconify-icon>
+                </div>
+            </div>
+
+            <!-- Filters (Collapsible fake) -->
+            <div class="p-4 border-b border-gray-100 bg-[#F8F9FA]/50 overflow-y-auto max-h-[200px]">
+                <div class="grid grid-cols-2 gap-3">
+                    <select class="text-xs p-2 border border-gray-200 rounded bg-white text-gray-600"><option>Alla åldrar</option></select>
+                    <select class="text-xs p-2 border border-gray-200 rounded bg-white text-gray-600"><option>Alla språk</option></select>
+                    <select class="text-xs p-2 border border-gray-200 rounded bg-white text-gray-600"><option>Stockholm</option></select>
+                    <select class="text-xs p-2 border border-gray-200 rounded bg-white text-gray-600"><option>Tillgänglighet</option></select>
+                </div>
+                <button class="w-full mt-3 bg-[#F39C12] text-white py-1.5 rounded text-xs font-semibold">Tillämpa filter</button>
+            </div>
+
+            <!-- Results List -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+                <div class="flex justify-between items-center px-1 mb-2">
+                    <span class="text-xs text-gray-500">Visar 24 kontaktpersoner</span>
+                    <span class="text-xs text-[#006B7D] font-medium cursor-pointer">Sortera: Avstånd</span>
+                </div>
+
+                <!-- Result Card 1 -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer" onclick="showPage('page-detail')">
+                    <div class="flex gap-4">
+                        <img src="https://i.pravatar.cc/150?u=a042581f4e29026024d" alt="Profile" class="w-14 h-14 rounded-full object-cover">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-semibold text-[#003D5C] text-sm">Elin Persson, 28</h3>
+                                    <p class="text-xs text-gray-500">Stockholm • <span class="text-[#27AE60] font-medium">Tillgänglig</span></p>
+                                </div>
+                                <iconify-icon icon="lucide:bookmark" class="text-gray-300 hover:text-[#F39C12]"></iconify-icon>
+                            </div>
+                            <div class="flex gap-2 mt-2">
+                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Svenska</span>
+                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Engelska</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Result Card 2 -->
+                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer">
+                    <div class="flex gap-4">
+                        <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Profile" class="w-14 h-14 rounded-full object-cover">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-semibold text-[#003D5C] text-sm">Johan Eriksson, 45</h3>
+                                    <p class="text-xs text-gray-500">Solna • <span class="text-[#F39C12] font-medium">Under granskning</span></p>
+                                </div>
+                                <iconify-icon icon="lucide:bookmark" class="text-gray-300 hover:text-[#F39C12]"></iconify-icon>
+                            </div>
+                            <div class="flex gap-2 mt-2">
+                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Svenska</span>
+                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Tyska</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                 <!-- Result Card 3 -->
+                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer">
+                    <div class="flex gap-4">
+                        <img src="https://i.pravatar.cc/150?u=12345" alt="Profile" class="w-14 h-14 rounded-full object-cover">
+                        <div class="flex-1">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h3 class="font-semibold text-[#003D5C] text-sm">Maria Lind, 33</h3>
+                                    <p class="text-xs text-gray-500">Nacka • <span class="text-[#27AE60] font-medium">Tillgänglig</span></p>
+                                </div>
+                                <iconify-icon icon="lucide:bookmark" class="text-gray-300 hover:text-[#F39C12]"></iconify-icon>
+                            </div>
+                            <div class="flex gap-2 mt-2">
+                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Svenska</span>
+                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Spanska</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Area -->
+        <div class="w-full md:w-[60%] lg:w-[65%] bg-[#E8F4F8] relative overflow-hidden">
+            <!-- Simulated Sweden Map shape using pure CSS/SVG pattern logic -->
+            <div class="absolute inset-0 flex items-center justify-center opacity-20">
+                <svg viewBox="0 0 100 200" class="h-[90%] fill-[#006B7D]">
+                    <path d="M40,190 C30,180 20,160 30,140 C20,130 10,100 25,80 C20,60 30,40 45,10 C55,5 65,15 60,30 C70,40 65,60 60,80 C65,100 70,140 60,170 C55,185 45,195 40,190 Z"></path>
+                </svg>
+            </div>
+            
+            <!-- Map Controls -->
+            <div class="absolute top-4 left-4 bg-white rounded-lg shadow-md p-1 flex flex-col gap-1">
+                <button class="p-2 hover:bg-gray-100 rounded text-gray-600"><iconify-icon icon="lucide:plus" width="20"></iconify-icon></button>
+                <div class="h-px bg-gray-200 w-full"></div>
+                <button class="p-2 hover:bg-gray-100 rounded text-gray-600"><iconify-icon icon="lucide:minus" width="20"></iconify-icon></button>
+            </div>
+
+            <!-- Pins -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-12 -translate-y-12 cursor-pointer group" onclick="showPage('page-detail')">
+                 <div class="bg-[#F39C12] w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white transform group-hover:scale-110 transition">
+                    <span class="text-xs font-bold">12</span>
+                 </div>
+            </div>
+            <div class="absolute top-1/3 left-1/2 cursor-pointer group">
+                 <div class="bg-[#003D5C] w-6 h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white transform group-hover:scale-110 transition">
+                 </div>
+            </div>
+             <div class="absolute bottom-1/3 left-1/3 cursor-pointer group">
+                 <div class="bg-[#003D5C] w-6 h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white transform group-hover:scale-110 transition">
+                 </div>
+            </div>
+
+            <!-- Legend -->
+            <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur rounded-lg p-3 shadow-md text-xs">
+                <div class="flex items-center gap-2 mb-1"><div class="w-3 h-3 rounded-full bg-[#003D5C]"></div> Hög densitet</div>
+                <div class="flex items-center gap-2 mb-1"><div class="w-3 h-3 rounded-full bg-[#006B7D]"></div> Låg densitet</div>
+                <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-[#F39C12]"></div> Vald</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 5. VOLUNTEER DETAIL PAGE -->
+    <!-- ============================================== -->
+    <div id="page-detail" class="app-page hidden min-h-screen bg-[#F8F9FA] pb-12">
+        <div class="max-w-[1000px] mx-auto pt-8 px-6">
+            <button onclick="showPage('page-search')" class="text-sm font-medium text-[#2C3E50] mb-6 flex items-center gap-2 hover:text-[#003D5C]">
+                <iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon> Tillbaka till sök
+            </button>
+            
+            <!-- Profile Header -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6 relative overflow-hidden">
+                <div class="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-[#003D5C] to-[#006B7D]"></div>
+                <div class="relative flex flex-col md:flex-row gap-8 items-end md:items-start pt-12">
+                    <img src="https://i.pravatar.cc/150?u=a042581f4e29026024d" class="w-32 h-32 rounded-full border-4 border-white shadow-lg object-cover bg-white">
+                    <div class="flex-1 space-y-2 mb-2">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div>
+                                <h1 class="text-3xl font-bold text-[#003D5C] tracking-tight">Elin Persson</h1>
+                                <p class="text-[#2C3E50]/70 flex items-center gap-2 mt-1">
+                                    <iconify-icon icon="lucide:map-pin" width="14"></iconify-icon> Stockholm
+                                    <span class="w-1 h-1 bg-gray-300 rounded-full"></span>
+                                    28 år
+                                </p>
+                            </div>
+                            <div class="flex gap-3">
+                                <button class="px-4 py-2 bg-white border border-[#003D5C] text-[#003D5C] rounded-lg text-sm font-medium hover:bg-gray-50 transition">Skriv ut profil</button>
+                                <button class="px-4 py-2 bg-[#F39C12] text-white rounded-lg text-sm font-medium hover:bg-[#E67E22] shadow-sm transition">Kontakta</button>
+                            </div>
+                        </div>
+                        
+                        <div class="flex flex-wrap gap-3 mt-4">
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D1FAE5] text-[#065F46] text-xs font-semibold">
+                                <iconify-icon icon="lucide:check-circle" width="12"></iconify-icon> Godkänd
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-medium">Svenska</span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-medium">Engelska</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Main Content -->
+                <div class="md:col-span-2 space-y-6">
+                    <!-- Tabs -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="flex border-b border-gray-200">
+                            <button class="flex-1 px-4 py-4 text-sm font-semibold text-[#003D5C] border-b-2 border-[#003D5C] bg-[#E8F4F8]/50">Om</button>
+                            <button class="flex-1 px-4 py-4 text-sm font-medium text-gray-500 hover:text-[#003D5C]">Erfarenhet</button>
+                            <button class="flex-1 px-4 py-4 text-sm font-medium text-gray-500 hover:text-[#003D5C]">Dokument</button>
+                        </div>
+                        <div class="p-8 space-y-8">
+                            <div>
+                                <h3 class="text-lg font-semibold text-[#003D5C] mb-3">Varför jag vill bli kontaktperson</h3>
+                                <p class="text-[#2C3E50]/80 leading-relaxed text-sm">
+                                    Jag har alltid varit intresserad av att hjälpa människor och känner att jag har tid och engagemang att ge. Efter att ha arbetat som ungdomsledare i tre år har jag insett vikten av trygga vuxna i ungas liv.
+                                </p>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-lg font-semibold text-[#003D5C] mb-3">Intressen</h3>
+                                <div class="flex gap-2 flex-wrap">
+                                    <span class="px-3 py-1 bg-[#F8F9FA] border border-gray-200 rounded-full text-xs text-gray-600">Fotboll</span>
+                                    <span class="px-3 py-1 bg-[#F8F9FA] border border-gray-200 rounded-full text-xs text-gray-600">Litteratur</span>
+                                    <span class="px-3 py-1 bg-[#F8F9FA] border border-gray-200 rounded-full text-xs text-gray-600">Matlagning</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Internal Notes -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                         <h3 class="text-sm font-bold uppercase text-gray-400 mb-4">Interna anteckningar</h3>
+                         <div class="bg-[#FEF3C7]/30 p-3 rounded-lg border border-[#FEF3C7] mb-3">
+                            <div class="flex justify-between mb-1">
+                                <span class="text-xs font-bold text-[#2C3E50]">Karin Svensson (Handläggare)</span>
+                                <span class="text-xs text-gray-400">2023-10-15</span>
+                            </div>
+                            <p class="text-xs text-[#2C3E50]">Mycket gott intryck vid intervjun. Verkar stabil och trygg.</p>
+                         </div>
+                         <textarea class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:border-[#003D5C]" placeholder="Lägg till ny anteckning..."></textarea>
+                         <button class="mt-2 text-xs bg-[#003D5C] text-white px-3 py-1.5 rounded hover:opacity-90">Spara</button>
+                    </div>
+                </div>
+
+                <!-- Sidebar -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-sm font-bold uppercase text-gray-400 mb-4">Status &amp; Historik</h3>
+                        <div class="relative pl-4 space-y-6 border-l border-gray-200 ml-2">
+                             <div class="relative">
+                                <div class="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-[#27AE60]"></div>
+                                <p class="text-xs font-semibold text-[#2C3E50]">Godkänd</p>
+                                <p class="text-[10px] text-gray-400">2023-10-20</p>
+                             </div>
+                             <div class="relative">
+                                <div class="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-gray-300"></div>
+                                <p class="text-xs font-semibold text-gray-500">Intervju genomförd</p>
+                                <p class="text-[10px] text-gray-400">2023-10-15</p>
+                             </div>
+                             <div class="relative">
+                                <div class="absolute -left-[21px] top-1 w-3 h-3 rounded-full bg-gray-300"></div>
+                                <p class="text-xs font-semibold text-gray-500">Ansökan inkom</p>
+                                <p class="text-[10px] text-gray-400">2023-10-10</p>
+                             </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="text-sm font-bold uppercase text-gray-400 mb-4">Åtgärder</h3>
+                        <div class="space-y-2">
+                             <button class="w-full py-2 border border-[#E74C3C] text-[#E74C3C] rounded-lg text-sm font-medium hover:bg-[#E74C3C]/5">Avsluta uppdrag</button>
+                             <button class="w-full py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50">Redigera profil</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 6. SOCIAL WORKER DASHBOARD -->
+    <!-- ============================================== -->
+    <div id="page-dashboard" class="app-page hidden min-h-screen bg-[#F8F9FA] flex">
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-[#003D5C] text-white flex-col hidden md:flex fixed h-full z-10">
+            <div class="p-6 border-b border-[#004e75]">
+                <div class="flex items-center gap-2 font-bold text-lg">
+                    <iconify-icon icon="lucide:layout-dashboard"></iconify-icon> Dashboard
+                </div>
+            </div>
+            
+            <div class="p-4">
+                <div class="flex items-center gap-3 mb-8 px-2">
+                    <img src="https://i.pravatar.cc/150?u=soc" class="w-10 h-10 rounded-full border border-white/20">
+                    <div>
+                        <p class="text-sm font-semibold">Karin Svensson</p>
+                        <p class="text-xs text-white/60">Stockholm Stad</p>
+                    </div>
+                </div>
+
+                <nav class="space-y-1">
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 bg-white/10 rounded-lg text-white text-sm font-medium">
+                        <iconify-icon icon="lucide:pie-chart" width="18"></iconify-icon> Översikt
+                    </a>
+                    <a href="#" onclick="showPage('page-search')" class="flex items-center gap-3 px-3 py-2.5 text-white/70 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition">
+                        <iconify-icon icon="lucide:search" width="18"></iconify-icon> Sök kontaktperson
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-white/70 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition justify-between">
+                        <div class="flex items-center gap-3"><iconify-icon icon="lucide:clock" width="18"></iconify-icon> Väntande</div>
+                        <span class="bg-[#F39C12] text-xs px-1.5 py-0.5 rounded font-bold text-white">12</span>
+                    </a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-white/70 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition">
+                        <iconify-icon icon="lucide:users" width="18"></iconify-icon> Aktiva volontärer
+                    </a>
+                    <a href="#" onclick="showPage('page-settings')" class="flex items-center gap-3 px-3 py-2.5 text-white/70 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition">
+                        <iconify-icon icon="lucide:settings" width="18"></iconify-icon> Inställningar
+                    </a>
+                </nav>
+            </div>
+            
+            <div class="mt-auto p-6 border-t border-[#004e75]">
+                <button onclick="showPage('page-landing')" class="flex items-center gap-3 text-white/60 hover:text-white text-sm">
+                    <iconify-icon icon="lucide:log-out" width="16"></iconify-icon> Logga ut
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 p-8">
+            <h1 class="text-2xl font-bold text-[#003D5C] mb-8 tracking-tight">Översikt</h1>
+            
+            <!-- Top Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-[#FEF3C7] text-[#F39C12] flex items-center justify-center">
+                        <iconify-icon icon="lucide:clock" width="24"></iconify-icon>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-[#2C3E50]">12</p>
+                        <p class="text-xs text-gray-500 uppercase font-semibold">Väntande gransk.</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-[#D1FAE5] text-[#27AE60] flex items-center justify-center">
+                        <iconify-icon icon="lucide:check-circle" width="24"></iconify-icon>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-[#2C3E50]">48</p>
+                        <p class="text-xs text-gray-500 uppercase font-semibold">Godkända</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-[#E8F4F8] text-[#006B7D] flex items-center justify-center">
+                        <iconify-icon icon="lucide:users" width="24"></iconify-icon>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-[#2C3E50]">23</p>
+                        <p class="text-xs text-gray-500 uppercase font-semibold">Aktiva placeringar</p>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-full bg-blue-50 text-[#003D5C] flex items-center justify-center">
+                        <iconify-icon icon="lucide:trending-up" width="24"></iconify-icon>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold text-[#2C3E50]">8</p>
+                        <p class="text-xs text-gray-500 uppercase font-semibold">Nya denna månad</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Priority Action Table -->
+                <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                    <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                        <h2 class="font-bold text-[#003D5C] flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-[#F39C12]"></div>
+                            Väntande granskningar
+                        </h2>
+                        <button class="text-xs font-medium text-[#006B7D] hover:underline">Visa alla</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="bg-[#F8F9FA] text-gray-500 font-medium">
+                                <tr>
+                                    <th class="px-6 py-3">Namn</th>
+                                    <th class="px-6 py-3">Kommun</th>
+                                    <th class="px-6 py-3">Datum</th>
+                                    <th class="px-6 py-3 text-right">Åtgärd</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-[#2C3E50]">Johan Eriksson</td>
+                                    <td class="px-6 py-4 text-gray-500">Solna</td>
+                                    <td class="px-6 py-4 text-gray-500">2023-10-22</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-[#F39C12] font-semibold text-xs border border-[#F39C12] px-3 py-1 rounded hover:bg-[#F39C12] hover:text-white transition">Granska</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-[#2C3E50]">Anna Berg</td>
+                                    <td class="px-6 py-4 text-gray-500">Stockholm</td>
+                                    <td class="px-6 py-4 text-gray-500">2023-10-21</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-[#F39C12] font-semibold text-xs border border-[#F39C12] px-3 py-1 rounded hover:bg-[#F39C12] hover:text-white transition">Granska</button>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-6 py-4 font-medium text-[#2C3E50]">Erik Lundin</td>
+                                    <td class="px-6 py-4 text-gray-500">Nacka</td>
+                                    <td class="px-6 py-4 text-gray-500">2023-10-20</td>
+                                    <td class="px-6 py-4 text-right">
+                                        <button class="text-[#F39C12] font-semibold text-xs border border-[#F39C12] px-3 py-1 rounded hover:bg-[#F39C12] hover:text-white transition">Granska</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="space-y-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="font-bold text-[#003D5C] mb-4">Snabbåtkomst</h2>
+                        <div class="grid gap-3">
+                            <button onclick="showPage('page-search')" class="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-[#003D5C] hover:shadow-md transition bg-gray-50 group text-left">
+                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition">
+                                    <iconify-icon icon="lucide:map" class="text-[#003D5C]"></iconify-icon>
+                                </div>
+                                <span class="font-medium text-[#2C3E50] text-sm">Sök kontaktpersoner</span>
+                            </button>
+                             <button class="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-[#003D5C] hover:shadow-md transition bg-gray-50 group text-left">
+                                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition">
+                                    <iconify-icon icon="lucide:clipboard-list" class="text-[#003D5C]"></iconify-icon>
+                                </div>
+                                <span class="font-medium text-[#2C3E50] text-sm">Granska ansökningar</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 7. ADMIN PANEL -->
+    <!-- ============================================== -->
+    <div id="page-admin" class="app-page hidden min-h-screen bg-[#F8F9FA] flex">
+        <aside class="w-64 bg-[#1e293b] text-white flex-col hidden md:flex fixed h-full z-10">
+            <div class="p-6 border-b border-gray-700">
+                <div class="flex items-center gap-2 font-bold text-lg">
+                    <iconify-icon icon="lucide:shield"></iconify-icon> Admin Panel
+                </div>
+            </div>
+            <div class="p-4">
+                 <nav class="space-y-1">
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 bg-white/10 rounded-lg text-white text-sm font-medium">Översikt</a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-white/70 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition">Användarhantering</a>
+                    <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-white/70 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition">Systemhälsa</a>
+                </nav>
+            </div>
+        </aside>
+
+        <main class="flex-1 md:ml-64 p-8">
+             <h1 class="text-2xl font-bold text-[#1e293b] mb-8 tracking-tight">Systemadministration</h1>
+             
+             <!-- System Health -->
+             <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 mb-8">
+                <h3 class="text-sm font-bold uppercase text-gray-400 mb-4">Systemhälsa</h3>
+                <div class="flex gap-8">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-sm font-medium">Databas: OK</span>
+                    </div>
+                     <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse"></div>
+                        <span class="text-sm font-medium">API: OK</span>
+                    </div>
+                     <div class="flex items-center gap-2">
+                        <div class="w-2.5 h-2.5 rounded-full bg-yellow-500"></div>
+                        <span class="text-sm font-medium">E-postkö: Fördröjning</span>
+                    </div>
+                </div>
+             </div>
+
+             <!-- User Table Mockup -->
+             <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="p-4 border-b border-gray-100 flex justify-between">
+                    <input type="text" placeholder="Sök användare..." class="border rounded px-3 py-1 text-sm">
+                    <button class="bg-[#003D5C] text-white px-3 py-1 rounded text-sm">Lägg till användare</button>
+                </div>
+                <table class="w-full text-sm text-left">
+                    <thead class="bg-gray-50 text-gray-500">
+                        <tr>
+                            <th class="px-6 py-3">Användare</th>
+                            <th class="px-6 py-3">Roll</th>
+                            <th class="px-6 py-3">Status</th>
+                            <th class="px-6 py-3 text-right"></th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        <tr>
+                            <td class="px-6 py-3">Karin Svensson</td>
+                            <td class="px-6 py-3"><span class="bg-blue-100 text-blue-800 px-2 py-0.5 rounded text-xs">Socialsekreterare</span></td>
+                            <td class="px-6 py-3 text-green-600">Aktiv</td>
+                            <td class="px-6 py-3 text-right text-gray-400 cursor-pointer">...</td>
+                        </tr>
+                        <tr>
+                             <td class="px-6 py-3">Admin User</td>
+                            <td class="px-6 py-3"><span class="bg-purple-100 text-purple-800 px-2 py-0.5 rounded text-xs">System Admin</span></td>
+                            <td class="px-6 py-3 text-green-600">Aktiv</td>
+                            <td class="px-6 py-3 text-right text-gray-400 cursor-pointer">...</td>
+                        </tr>
+                    </tbody>
+                </table>
+             </div>
+        </main>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 8. SETTINGS PAGE -->
+    <!-- ============================================== -->
+    <div id="page-settings" class="app-page hidden min-h-screen bg-[#F8F9FA]">
+        <div class="max-w-[800px] mx-auto py-12 px-6">
+            <h1 class="text-2xl font-bold text-[#003D5C] mb-8">Inställningar</h1>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                <div class="flex border-b border-gray-200 bg-gray-50">
+                    <button class="px-6 py-3 text-sm font-medium bg-white border-t-2 border-[#003D5C] text-[#003D5C]">Profil</button>
+                    <button class="px-6 py-3 text-sm font-medium text-gray-500 hover:bg-gray-100">Säkerhet</button>
+                    <button class="px-6 py-3 text-sm font-medium text-gray-500 hover:bg-gray-100">Aviseringar</button>
+                </div>
+                
+                <div class="p-8 space-y-8">
+                    <div class="flex items-center gap-6">
+                        <div class="relative">
+                            <img src="https://i.pravatar.cc/150?u=soc" class="w-20 h-20 rounded-full border border-gray-200">
+                            <div class="absolute bottom-0 right-0 bg-[#003D5C] text-white p-1.5 rounded-full cursor-pointer hover:bg-[#002A40]">
+                                <iconify-icon icon="lucide:camera" width="14"></iconify-icon>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold text-lg">Karin Svensson</h3>
+                            <p class="text-sm text-gray-500">Socialsekreterare, Stockholm Stad</p>
+                        </div>
+                    </div>
+
+                    <div class="grid gap-4 max-w-md">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">E-postadress</label>
+                            <input type="email" value="karin.svensson@stockholm.se" class="w-full border border-gray-200 rounded px-3 py-2 text-sm bg-gray-50" readonly="">
+                        </div>
+                        <div>
+                             <label class="block text-sm font-medium mb-1">Telefonnummer</label>
+                            <input type="tel" value="08-123 45 67" class="w-full border border-gray-200 rounded px-3 py-2 text-sm focus:border-[#003D5C] focus:outline-none">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-gray-100">
+                        <button class="bg-[#003D5C] text-white px-4 py-2 rounded-lg text-sm font-medium hover:opacity-90">Spara ändringar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================== -->
+    <!-- 9. FAQ PAGE -->
+    <!-- ============================================== -->
+    <div id="page-faq" class="app-page hidden min-h-screen bg-[#F8F9FA] py-12">
+        <div class="max-w-[800px] mx-auto px-6">
+             <div class="text-center mb-12">
+                <h1 class="text-3xl font-bold text-[#003D5C] mb-4">Vanliga frågor</h1>
+                <div class="relative max-w-md mx-auto">
+                    <input type="text" placeholder="Sök svar..." class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-[#003D5C]">
+                    <iconify-icon icon="lucide:search" class="absolute left-3 top-3.5 text-gray-400"></iconify-icon>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <h2 class="text-lg font-semibold text-[#006B7D] mb-4">För volontärer</h2>
+                    <div class="space-y-3">
+                        <!-- FAQ Item 1 -->
+                        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                            <button onclick="toggleAccordion('faq-1')" class="w-full flex justify-between items-center p-4 text-left font-medium text-sm text-[#2C3E50] hover:bg-gray-50">
+                                Hur ansöker jag?
+                                <iconify-icon id="faq-1-icon" icon="lucide:plus" class="text-gray-400"></iconify-icon>
+                            </button>
+                            <div id="faq-1" class="hidden p-4 pt-0 text-sm text-gray-500 border-t border-gray-100 mt-2">
+                                Du registrerar enkelt en profil via vår startsida. Det tar cirka 5-10 minuter.
+                            </div>
+                        </div>
+                         <!-- FAQ Item 2 -->
+                        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                            <button onclick="toggleAccordion('faq-2')" class="w-full flex justify-between items-center p-4 text-left font-medium text-sm text-[#2C3E50] hover:bg-gray-50">
+                                Hur lång tid tar granskningen?
+                                <iconify-icon id="faq-2-icon" icon="lucide:plus" class="text-gray-400"></iconify-icon>
+                            </button>
+                            <div id="faq-2" class="hidden p-4 pt-0 text-sm text-gray-500 border-t border-gray-100 mt-2">
+                                Vanligtvis tar det 2-3 veckor beroende på handläggningstider hos belastningsregistret.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <h2 class="text-lg font-semibold text-[#006B7D] mb-4">För socialsekreterare</h2>
+                     <div class="space-y-3">
+                        <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                            <button class="w-full flex justify-between items-center p-4 text-left font-medium text-sm text-[#2C3E50] hover:bg-gray-50">
+                                Hur säkerställer vi GDPR?
+                                <iconify-icon icon="lucide:plus" class="text-gray-400"></iconify-icon>
+                            </button>
+                        </div>
+                     </div>
+                </div>
+            </div>
+            
+            <div class="mt-12 text-center">
+                <p class="text-gray-500 text-sm mb-2">Hittade du inte svaret?</p>
+                <a href="#" class="text-[#F39C12] font-semibold text-sm hover:underline">Kontakta supporten</a>
+            </div>
+        </div>
+    </div>
+
+
+</body></html>
