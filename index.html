@@ -120,6 +120,12 @@
             font-size: 13px;
             color: #6b7280;
             font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .volunteer-button .subtext:hover {
+            color: #003D5C;
+            text-decoration: underline;
         }
 
         /* Leaflet custom styles */
@@ -475,7 +481,7 @@
         <!-- Element 3: "Bli kontaktperson" Button -->
         <div class="volunteer-button">
             <button onclick="goToRegistration()">Bli kontaktperson</button>
-            <div class="subtext">För privatpersoner</div>
+            <div class="subtext" onclick="goToRegistration()" style="cursor: pointer;">För privatpersoner</div>
         </div>
     </div>
 
