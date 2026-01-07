@@ -18,10 +18,9 @@
             <button onclick="showPage('page-landing')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">1. Landing Page</button>
             <button onclick="showPage('page-register')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">2. Volunteer Register</button>
             <button onclick="showPage('page-login')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">3. Login</button>
-            <button onclick="showPage('page-search')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">4. Map Search</button>
             <a href="http://localhost:3000/search" target="_blank" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium flex items-center gap-2">
                 <iconify-icon icon="lucide:map" width="14"></iconify-icon>
-                Interactive Sweden Map
+                4. Map Search
             </a>
             <button onclick="showPage('page-detail')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">5. Volunteer Detail</button>
             <button onclick="showPage('page-dashboard')" class="text-left px-3 py-2 hover:bg-[#E8F4F8] text-[#003D5C] rounded-md text-xs font-medium">6. Social Worker Dash</button>
@@ -80,7 +79,7 @@
                         </button>
                         <a href="http://localhost:3000/search" target="_blank" class="bg-transparent border border-white/30 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition flex items-center gap-2">
                             <iconify-icon icon="lucide:map" width="18"></iconify-icon>
-                            Interactive Sweden Map
+                            Sök kontaktpersoner
                         </a>
                     </div>
                 </div>
@@ -508,151 +507,15 @@
         </div>
     </div>
 
-    <!-- ============================================== -->
-    <!-- 4. MAP SEARCH INTERFACE -->
-    <!-- ============================================== -->
-    <div id="page-search" class="app-page hidden h-screen flex flex-col md:flex-row overflow-hidden">
-        <!-- Sidebar -->
-        <div class="w-full md:w-[40%] lg:w-[35%] bg-white border-r border-gray-200 flex flex-col h-full z-20 shadow-xl">
-            <!-- Search Header -->
-            <div class="p-6 border-b border-gray-100">
-                <div class="flex items-center gap-2 mb-4 cursor-pointer" onclick="showPage('page-landing')">
-                     <iconify-icon icon="lucide:arrow-left" class="text-gray-400"></iconify-icon>
-                     <h1 class="text-xl font-bold text-[#003D5C]">Sök kontaktpersoner</h1>
-                </div>
-                <div class="relative">
-                    <input type="text" placeholder="Sök efter namn, kommun..." class="w-full pl-10 pr-4 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-[#003D5C]">
-                    <iconify-icon icon="lucide:search" class="absolute left-3 top-3 text-gray-400" width="16"></iconify-icon>
-                </div>
-            </div>
-
-            <!-- Filters (Collapsible fake) -->
-            <div class="p-4 border-b border-gray-100 bg-[#F8F9FA]/50 overflow-y-auto max-h-[200px]">
-                <div class="grid grid-cols-2 gap-3">
-                    <select class="text-xs p-2 border border-gray-200 rounded bg-white text-gray-600"><option>Alla åldrar</option></select>
-                    <select class="text-xs p-2 border border-gray-200 rounded bg-white text-gray-600"><option>Alla språk</option></select>
-                    <select class="text-xs p-2 border border-gray-200 rounded bg-white text-gray-600"><option>Stockholm</option></select>
-                    <select class="text-xs p-2 border border-gray-200 rounded bg-white text-gray-600"><option>Tillgänglighet</option></select>
-                </div>
-                <button class="w-full mt-3 bg-[#F39C12] text-white py-1.5 rounded text-xs font-semibold">Tillämpa filter</button>
-            </div>
-
-            <!-- Results List -->
-            <div class="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
-                <div class="flex justify-between items-center px-1 mb-2">
-                    <span class="text-xs text-gray-500">Visar 24 kontaktpersoner</span>
-                    <span class="text-xs text-[#006B7D] font-medium cursor-pointer">Sortera: Avstånd</span>
-                </div>
-
-                <!-- Result Card 1 -->
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer" onclick="showPage('page-detail')">
-                    <div class="flex gap-4">
-                        <img src="https://i.pravatar.cc/150?u=a042581f4e29026024d" alt="Profile" class="w-14 h-14 rounded-full object-cover">
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="font-semibold text-[#003D5C] text-sm">Elin Persson, 28</h3>
-                                    <p class="text-xs text-gray-500">Stockholm • <span class="text-[#27AE60] font-medium">Tillgänglig</span></p>
-                                </div>
-                                <iconify-icon icon="lucide:bookmark" class="text-gray-300 hover:text-[#F39C12]"></iconify-icon>
-                            </div>
-                            <div class="flex gap-2 mt-2">
-                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Svenska</span>
-                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Engelska</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Result Card 2 -->
-                <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer">
-                    <div class="flex gap-4">
-                        <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Profile" class="w-14 h-14 rounded-full object-cover">
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="font-semibold text-[#003D5C] text-sm">Johan Eriksson, 45</h3>
-                                    <p class="text-xs text-gray-500">Solna • <span class="text-[#F39C12] font-medium">Under granskning</span></p>
-                                </div>
-                                <iconify-icon icon="lucide:bookmark" class="text-gray-300 hover:text-[#F39C12]"></iconify-icon>
-                            </div>
-                            <div class="flex gap-2 mt-2">
-                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Svenska</span>
-                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Tyska</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                 <!-- Result Card 3 -->
-                 <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer">
-                    <div class="flex gap-4">
-                        <img src="https://i.pravatar.cc/150?u=12345" alt="Profile" class="w-14 h-14 rounded-full object-cover">
-                        <div class="flex-1">
-                            <div class="flex justify-between items-start">
-                                <div>
-                                    <h3 class="font-semibold text-[#003D5C] text-sm">Maria Lind, 33</h3>
-                                    <p class="text-xs text-gray-500">Nacka • <span class="text-[#27AE60] font-medium">Tillgänglig</span></p>
-                                </div>
-                                <iconify-icon icon="lucide:bookmark" class="text-gray-300 hover:text-[#F39C12]"></iconify-icon>
-                            </div>
-                            <div class="flex gap-2 mt-2">
-                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Svenska</span>
-                                <span class="text-[10px] bg-gray-100 px-1.5 py-0.5 rounded text-gray-600">Spanska</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Map Area -->
-        <div class="w-full md:w-[60%] lg:w-[65%] bg-[#E8F4F8] relative overflow-hidden">
-            <!-- Simulated Sweden Map shape using pure CSS/SVG pattern logic -->
-            <div class="absolute inset-0 flex items-center justify-center opacity-20">
-                <svg viewBox="0 0 100 200" class="h-[90%] fill-[#006B7D]">
-                    <path d="M40,190 C30,180 20,160 30,140 C20,130 10,100 25,80 C20,60 30,40 45,10 C55,5 65,15 60,30 C70,40 65,60 60,80 C65,100 70,140 60,170 C55,185 45,195 40,190 Z"></path>
-                </svg>
-            </div>
-            
-            <!-- Map Controls -->
-            <div class="absolute top-4 left-4 bg-white rounded-lg shadow-md p-1 flex flex-col gap-1">
-                <button class="p-2 hover:bg-gray-100 rounded text-gray-600"><iconify-icon icon="lucide:plus" width="20"></iconify-icon></button>
-                <div class="h-px bg-gray-200 w-full"></div>
-                <button class="p-2 hover:bg-gray-100 rounded text-gray-600"><iconify-icon icon="lucide:minus" width="20"></iconify-icon></button>
-            </div>
-
-            <!-- Pins -->
-            <div class="absolute top-1/2 left-1/2 -translate-x-12 -translate-y-12 cursor-pointer group" onclick="showPage('page-detail')">
-                 <div class="bg-[#F39C12] w-8 h-8 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white transform group-hover:scale-110 transition">
-                    <span class="text-xs font-bold">12</span>
-                 </div>
-            </div>
-            <div class="absolute top-1/3 left-1/2 cursor-pointer group">
-                 <div class="bg-[#003D5C] w-6 h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white transform group-hover:scale-110 transition">
-                 </div>
-            </div>
-             <div class="absolute bottom-1/3 left-1/3 cursor-pointer group">
-                 <div class="bg-[#003D5C] w-6 h-6 rounded-full border-2 border-white shadow-lg flex items-center justify-center text-white transform group-hover:scale-110 transition">
-                 </div>
-            </div>
-
-            <!-- Legend -->
-            <div class="absolute bottom-4 right-4 bg-white/90 backdrop-blur rounded-lg p-3 shadow-md text-xs">
-                <div class="flex items-center gap-2 mb-1"><div class="w-3 h-3 rounded-full bg-[#003D5C]"></div> Hög densitet</div>
-                <div class="flex items-center gap-2 mb-1"><div class="w-3 h-3 rounded-full bg-[#006B7D]"></div> Låg densitet</div>
-                <div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-[#F39C12]"></div> Vald</div>
-            </div>
-        </div>
-    </div>
 
     <!-- ============================================== -->
     <!-- 5. VOLUNTEER DETAIL PAGE -->
     <!-- ============================================== -->
     <div id="page-detail" class="app-page hidden min-h-screen bg-[#F8F9FA] pb-12">
         <div class="max-w-[1000px] mx-auto pt-8 px-6">
-            <button onclick="showPage('page-search')" class="text-sm font-medium text-[#2C3E50] mb-6 flex items-center gap-2 hover:text-[#003D5C]">
+            <a href="http://localhost:3000/search" target="_blank" class="text-sm font-medium text-[#2C3E50] mb-6 flex items-center gap-2 hover:text-[#003D5C]">
                 <iconify-icon icon="lucide:arrow-left" width="16"></iconify-icon> Tillbaka till sök
-            </button>
+            </a>
             
             <!-- Profile Header -->
             <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-8 mb-6 relative overflow-hidden">
@@ -790,7 +653,7 @@
                     <a href="#" class="flex items-center gap-3 px-3 py-2.5 bg-white/10 rounded-lg text-white text-sm font-medium">
                         <iconify-icon icon="lucide:pie-chart" width="18"></iconify-icon> Översikt
                     </a>
-                    <a href="#" onclick="showPage('page-search')" class="flex items-center gap-3 px-3 py-2.5 text-white/70 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition">
+                    <a href="http://localhost:3000/search" target="_blank" class="flex items-center gap-3 px-3 py-2.5 text-white/70 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition">
                         <iconify-icon icon="lucide:search" width="18"></iconify-icon> Sök kontaktperson
                     </a>
                     <a href="#" class="flex items-center gap-3 px-3 py-2.5 text-white/70 hover:text-white hover:bg-white/5 rounded-lg text-sm font-medium transition justify-between">
@@ -912,12 +775,12 @@
                     <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
                         <h2 class="font-bold text-[#003D5C] mb-4">Snabbåtkomst</h2>
                         <div class="grid gap-3">
-                            <button onclick="showPage('page-search')" class="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-[#003D5C] hover:shadow-md transition bg-gray-50 group text-left">
+                            <a href="http://localhost:3000/search" target="_blank" class="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-[#003D5C] hover:shadow-md transition bg-gray-50 group text-left">
                                 <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition">
                                     <iconify-icon icon="lucide:map" class="text-[#003D5C]"></iconify-icon>
                                 </div>
                                 <span class="font-medium text-[#2C3E50] text-sm">Sök kontaktpersoner</span>
-                            </button>
+                            </a>
                              <button class="flex items-center gap-3 p-4 border border-gray-200 rounded-lg hover:border-[#003D5C] hover:shadow-md transition bg-gray-50 group text-left">
                                 <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm group-hover:scale-110 transition">
                                     <iconify-icon icon="lucide:clipboard-list" class="text-[#003D5C]"></iconify-icon>
