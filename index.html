@@ -77,6 +77,7 @@
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            margin-bottom: 20px;
         }
 
         #sweden-map {
@@ -472,18 +473,24 @@
         }
 
         @media (max-width: 767px) {
+            .homepage-container {
+                justify-content: flex-start;
+                padding-top: 80px;
+            }
+
             .sweden-map-container {
-                width: 95vw;
-                height: 50vh;
+                width: 90vw;
+                height: 55vh;
                 border-radius: 12px;
+                margin-bottom: 100px;
             }
 
             .button-container {
                 flex-direction: column;
                 gap: 10px;
-                bottom: 12px;
+                bottom: 16px;
                 width: 90%;
-                max-width: 280px;
+                max-width: 300px;
             }
 
             .volunteer-button,
@@ -507,17 +514,18 @@
             }
 
             .platform-logo {
-                top: 12px;
-                left: 12px;
+                top: 16px;
+                left: 16px;
             }
 
             .platform-logo .icon {
-                width: 28px;
-                height: 28px;
+                width: 32px;
+                height: 32px;
             }
 
             .platform-logo .text {
-                font-size: 14px;
+                font-size: 16px;
+                display: block;
             }
 
             .region-modal,
@@ -534,15 +542,20 @@
         }
 
         @media (max-width: 480px) {
+            .homepage-container {
+                padding-top: 70px;
+            }
+
             .sweden-map-container {
-                width: 98vw;
-                height: 45vh;
+                width: 92vw;
+                height: 50vh;
+                margin-bottom: 90px;
             }
 
             .button-container {
-                bottom: 8px;
+                bottom: 12px;
                 gap: 8px;
-                max-width: 260px;
+                max-width: 280px;
             }
 
             .volunteer-button button,
@@ -553,7 +566,8 @@
             }
 
             .platform-logo .text {
-                display: none;
+                font-size: 14px;
+                display: block;
             }
         }
     </style>
