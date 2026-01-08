@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Invitation System</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #003D5C;
+            margin-top: 0;
+        }
+        .link {
+            display: block;
+            padding: 15px;
+            background: #003D5C;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            margin: 10px 0;
+            text-align: center;
+            transition: background 0.3s;
+        }
+        .link:hover {
+            background: #005580;
+        }
+        .status {
+            padding: 10px;
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            margin: 10px 0;
+        }
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🎉 Social Worker Invitation System - Test Page</h1>
+        
+        <div class="status">
+            <strong>✅ Server is running!</strong><br>
+            You're viewing this page, which means the server is working correctly.
+        </div>
+
+        <h2>Quick Links</h2>
+        
+        <a href="/pages/accept-invitation.html" class="link">
+            📝 Invitation Acceptance Page (No Token)
+        </a>
+        
+        <a href="/pages/accept-invitation.html?token=test123" class="link">
+            🔗 Invitation Acceptance Page (With Test Token)
+        </a>
+        
+        <a href="/register.html" class="link">
+            📋 Volunteer Registration Page
+        </a>
+        
+        <a href="/index.html" class="link">
+            🏠 Main Platform Page
+        </a>
+
+        <h2>System Status</h2>
+        <ul>
+            <li>✅ Database migrations completed</li>
+            <li>✅ Supabase connection configured</li>
+            <li>✅ 15 municipalities seeded</li>
+            <li>✅ 20 approved email domains seeded</li>
+            <li>✅ Admin user created</li>
+            <li>✅ Server running on port 8000</li>
+        </ul>
+
+        <h2>Next Steps</h2>
+        <ol>
+            <li>Click the "Invitation Acceptance Page" link above</li>
+            <li>You should see a form with password strength meter</li>
+            <li>Test entering a password and watch the requirements update</li>
+            <li>The form validates Swedish municipality email domains</li>
+        </ol>
+
+        <h2>Approved Email Domains</h2>
+        <p>The system accepts emails from these domains:</p>
+        <code>
+            kommun.se, stockholm.se, goteborg.se, malmo.se, uppsala.se, 
+            linkoping.se, orebro.se, vasteras.se, helsingborg.se, 
+            norrkoping.se, jonkoping.se, umea.se, lund.se, boras.se, 
+            sundsvall.se, gavle.se, eskilstuna.se, sodertalje.se, 
+            karlstad.se, vaxjo.se
+        </code>
+
+        <h2>Documentation</h2>
+        <ul>
+            <li><strong>SOCIAL_WORKER_INVITATION_SYSTEM.md</strong> - Complete system documentation</li>
+            <li><strong>HOW_TO_SETUP.md</strong> - Detailed setup guide</li>
+            <li><strong>RUN_MIGRATIONS.md</strong> - Database migration instructions</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h3>🔧 Troubleshooting</h3>
+        <p><strong>If links don't work:</strong></p>
+        <ul>
+            <li>Make sure server is running: <code>python -m http.server 8000</code></li>
+            <li>Check you're accessing: <code>http://localhost:8000/test-invitation.html</code></li>
+            <li>Try refreshing the page</li>
+        </ul>
+    </div>
+</body>
+</html>

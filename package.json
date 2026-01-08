@@ -10,10 +10,11 @@
     "supabase:start": "supabase start",
     "supabase:stop": "supabase stop",
     "supabase:push": "supabase db push",
-    "supabase:reset": "supabase db reset"
+    "supabase:reset": "supabase db reset",
+    "server": "python -m http.server 8000"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0",
+    "@supabase/supabase-js": "^2.90.0",
     "next": "^14.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

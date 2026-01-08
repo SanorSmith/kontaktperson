@@ -230,7 +230,7 @@ RETURNS TABLE(
   municipality_id TEXT,
   municipality_name TEXT,
   department TEXT,
-  position TEXT,
+  job_position TEXT,
   access_level TEXT,
   expires_at TIMESTAMPTZ
 ) AS $$
@@ -246,7 +246,7 @@ BEGIN
     sw.municipality_id,
     m.name AS municipality_name,
     sw.department,
-    sw.position,
+    sw.position AS job_position,
     sw.access_level,
     sw.invitation_expires_at
   FROM social_workers sw

@@ -84,12 +84,20 @@
             height: 100%;
         }
 
-        /* Volunteer button - bottom right, visible but not competing */
-        .volunteer-button {
+        /* Button container - centered at bottom */
+        .button-container {
             position: fixed;
-            bottom: 40px;
-            right: 40px;
-            z-index: 10;
+            bottom: 32px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 90;
+            display: flex;
+            gap: 24px;
+            align-items: flex-end;
+        }
+
+        /* Volunteer button */
+        .volunteer-button {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -120,12 +128,40 @@
             font-size: 13px;
             color: #6b7280;
             font-weight: 500;
-            transition: color 0.2s;
         }
 
-        .volunteer-button .subtext:hover {
-            color: #003D5C;
-            text-decoration: underline;
+        /* Social Worker Button */
+        .social-worker-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .social-worker-button button {
+            min-width: 200px;
+            height: 56px;
+            background: #003D5C;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .social-worker-button button:hover {
+            background: #005580;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .social-worker-button .subtext {
+            font-size: 13px;
+            color: #6b7280;
+            font-weight: 500;
         }
 
         /* Leaflet custom styles */
@@ -478,10 +514,17 @@
             <div id="sweden-map"></div>
         </div>
 
-        <!-- Element 3: "Bli kontaktperson" Button -->
-        <div class="volunteer-button">
-            <button onclick="goToRegistration()">Bli kontaktperson</button>
-            <div class="subtext" onclick="goToRegistration()" style="cursor: pointer;">För privatpersoner</div>
+        <!-- Element 3 & 4: Registration Buttons Container -->
+        <div class="button-container">
+            <div class="volunteer-button">
+                <button onclick="goToRegistration()">Bli kontaktperson</button>
+                <div class="subtext">För privatpersoner</div>
+            </div>
+
+            <div class="social-worker-button">
+                <button onclick="openSocialWorkerModal()">Socialsekreterare</button>
+                <div class="subtext">För kommunanställda</div>
+            </div>
         </div>
     </div>
 
@@ -494,6 +537,28 @@
                 <span class="count" id="region-count"></span> kontaktpersoner i <span id="region-name-2"></span>
             </div>
             <div class="volunteer-grid" id="volunteer-grid"></div>
+        </div>
+    </div>
+
+    <!-- Modal: Social Worker Options -->
+    <div id="social-worker-modal" class="modal-overlay" style="display: none;">
+        <div class="auth-modal">
+            <button class="close-btn" onclick="closeSocialWorkerModal()">✕</button>
+            <h2>Socialsekreterare</h2>
+            <p>Välj ett alternativ:</p>
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 24px;">
+                <button onclick="handleSocialWorkerLogin()" style="background: #003D5C; color: white; padding: 16px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                    🔐 Logga in
+                    <div style="font-size: 13px; font-weight: 400; margin-top: 4px; opacity: 0.9;">Jag har redan ett konto</div>
+                </button>
+                <button onclick="window.location.href='/pages/accept-invitation.html'" style="background: #F39C12; color: white; padding: 16px; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;">
+                    ✉️ Aktivera inbjudan
+                    <div style="font-size: 13px; font-weight: 400; margin-top: 4px; opacity: 0.9;">Jag har fått en inbjudan via e-post</div>
+                </button>
+            </div>
+            <p class="note" style="margin-top: 24px; font-size: 13px; color: #6b7280;">
+                Socialsekreterare måste bjudas in av en administratör. Kontakta din chef om du behöver tillgång.
+            </p>
         </div>
     </div>
 
@@ -796,6 +861,22 @@
         // Go to registration
         function goToRegistration() {
             window.location.href = 'register.html';
+        }
+
+        // Open social worker modal
+        function openSocialWorkerModal() {
+            document.getElementById('social-worker-modal').style.display = 'flex';
+        }
+
+        // Close social worker modal
+        function closeSocialWorkerModal() {
+            document.getElementById('social-worker-modal').style.display = 'none';
+        }
+
+        // Handle social worker login
+        function handleSocialWorkerLogin() {
+            closeSocialWorkerModal();
+            openAuthModal(null);
         }
 
         // Prevent all scrolling

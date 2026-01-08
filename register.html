@@ -328,19 +328,19 @@
                     <div class="grid gap-5">
                         <div class="space-y-1.5">
                             <label class="block text-sm font-medium text-[#2C3E50]">Fullständigt namn</label>
-                            <input type="text" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition" placeholder="T.ex. Anna Andersson">
+                            <input type="text" id="reg-name" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition" placeholder="T.ex. Anna Andersson" oninput="updateSummary()">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-sm font-medium text-[#2C3E50]">E-postadress</label>
-                            <input type="email" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition" placeholder="namn@exempel.se">
+                            <input type="email" id="reg-email" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition" placeholder="namn@exempel.se" oninput="updateSummary()">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-sm font-medium text-[#2C3E50]">Telefonnummer</label>
-                            <input type="tel" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition" placeholder="070-123 45 67">
+                            <input type="tel" id="reg-phone" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition" placeholder="070-123 45 67" oninput="updateSummary()">
                         </div>
                         <div class="space-y-1.5">
                             <label class="block text-sm font-medium text-[#2C3E50]">Välj din kommun</label>
-                            <select class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition text-[#2C3E50]">
+                            <select id="reg-municipality" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C] focus:ring-1 focus:ring-[#003D5C] transition text-[#2C3E50]" onchange="updateSummary()">
                                 <option>Stockholm</option>
                                 <option>Göteborg</option>
                                 <option>Malmö</option>
@@ -360,14 +360,14 @@
                         <div class="flex gap-6">
                             <div class="space-y-1.5 w-32">
                                 <label class="block text-sm font-medium text-[#2C3E50]">Ålder</label>
-                                <input type="number" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C]" placeholder="30">
+                                <input type="number" id="reg-age" class="w-full bg-[#F8F9FA] border border-gray-200 rounded-lg px-4 py-2.5 focus:outline-none focus:border-[#003D5C]" placeholder="30" oninput="updateSummary()">
                             </div>
                             <div class="space-y-1.5 flex-1">
                                 <label class="block text-sm font-medium text-[#2C3E50] mb-2">Kön</label>
                                 <div class="flex gap-4">
-                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="sex" class="accent-[#003D5C]"> Man</label>
-                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="sex" class="accent-[#003D5C]"> Kvinna</label>
-                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="sex" class="accent-[#003D5C]"> Annat</label>
+                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="sex" value="Man" class="accent-[#003D5C]" onchange="updateSummary()"> Man</label>
+                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="sex" value="Kvinna" class="accent-[#003D5C]" onchange="updateSummary()"> Kvinna</label>
+                                    <label class="flex items-center gap-2 text-sm cursor-pointer"><input type="radio" name="sex" value="Annan" class="accent-[#003D5C]" onchange="updateSummary()"> Annat</label>
                                 </div>
                             </div>
                         </div>
@@ -375,10 +375,10 @@
                         <div class="space-y-2">
                             <label class="block text-sm font-medium text-[#2C3E50]">Språk du talar</label>
                             <div class="flex flex-wrap gap-3">
-                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded border-gray-300"> <span class="text-sm">Svenska</span></label>
-                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded border-gray-300"> <span class="text-sm">Engelska</span></label>
-                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded border-gray-300"> <span class="text-sm">Arabiska</span></label>
-                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" class="custom-checkbox w-4 h-4 rounded border-gray-300"> <span class="text-sm">Spanska</span></label>
+                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" id="lang-svenska" class="custom-checkbox w-4 h-4 rounded border-gray-300" onchange="updateSummary()"> <span class="text-sm">Svenska</span></label>
+                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" id="lang-engelska" class="custom-checkbox w-4 h-4 rounded border-gray-300" onchange="updateSummary()"> <span class="text-sm">Engelska</span></label>
+                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" id="lang-arabiska" class="custom-checkbox w-4 h-4 rounded border-gray-300" onchange="updateSummary()"> <span class="text-sm">Arabiska</span></label>
+                                <label class="flex items-center gap-2 p-2 border border-gray-200 rounded bg-[#F8F9FA] cursor-pointer"><input type="checkbox" id="lang-spanska" class="custom-checkbox w-4 h-4 rounded border-gray-300" onchange="updateSummary()"> <span class="text-sm">Spanska</span></label>
                             </div>
                         </div>
 
@@ -459,20 +459,20 @@
                     <div class="space-y-4">
                         <div class="bg-[#F8F9FA] p-4 rounded-lg border border-gray-200 relative">
                             <h3 class="text-xs font-bold uppercase text-gray-400 mb-2">Grundinfo</h3>
-                            <p class="text-sm font-medium">Anna Andersson</p>
-                            <p class="text-sm text-gray-500">anna@exempel.se</p>
+                            <p id="summary-name" class="text-sm font-medium">-</p>
+                            <p id="summary-email" class="text-sm text-gray-500">-</p>
                             <button onclick="showStep(1)" class="absolute top-4 right-4 text-xs text-[#F39C12] font-semibold hover:underline">Redigera</button>
                         </div>
                         <div class="bg-[#F8F9FA] p-4 rounded-lg border border-gray-200 relative">
                             <h3 class="text-xs font-bold uppercase text-gray-400 mb-2">Om dig</h3>
-                            <p class="text-sm text-gray-500">30 år, Kvinna. Svenska, Engelska.</p>
+                            <p id="summary-personal" class="text-sm text-gray-500">-</p>
                             <button onclick="showStep(2)" class="absolute top-4 right-4 text-xs text-[#F39C12] font-semibold hover:underline">Redigera</button>
                         </div>
                     </div>
 
                     <div class="flex justify-between pt-4 items-center">
                         <button onclick="showStep(4)" class="text-[#003D5C] px-6 py-2.5 rounded-lg font-medium border border-gray-200 bg-white hover:bg-gray-50 transition">Tillbaka</button>
-                        <button onclick="alert('Ansökan skickad! (Demo)'); showPage('page-landing')" class="bg-[#F39C12] text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl hover:bg-[#E67E22] transition w-full md:w-auto">Skicka ansökan</button>
+                        <button onclick="submitApplication()" class="bg-[#F39C12] text-white px-8 py-3 rounded-lg font-semibold shadow-lg hover:shadow-xl hover:bg-[#E67E22] transition w-full md:w-auto">Skicka ansökan</button>
                     </div>
                 </div>
 
@@ -991,5 +991,63 @@
         </div>
     </div>
 
+    <script>
+        // Update summary function
+        function updateSummary() {
+            // Get form values
+            const name = document.getElementById('reg-name').value || '-';
+            const email = document.getElementById('reg-email').value || '-';
+            const age = document.getElementById('reg-age').value || '-';
+            const gender = document.querySelector('input[name="sex"]:checked')?.value || '-';
+            
+            // Get selected languages
+            const languages = [];
+            if (document.getElementById('lang-svenska').checked) languages.push('Svenska');
+            if (document.getElementById('lang-engelska').checked) languages.push('Engelska');
+            if (document.getElementById('lang-arabiska').checked) languages.push('Arabiska');
+            if (document.getElementById('lang-spanska').checked) languages.push('Spanska');
+            
+            // Update summary
+            document.getElementById('summary-name').textContent = name;
+            document.getElementById('summary-email').textContent = email;
+            document.getElementById('summary-personal').textContent = `${age} år, ${gender}. ${languages.join(', ') || 'Inga språk valda'}.`;
+        }
 
+        // Submit application function
+        function submitApplication() {
+            // Get all form data
+            const formData = {
+                name: document.getElementById('reg-name').value,
+                email: document.getElementById('reg-email').value,
+                phone: document.getElementById('reg-phone').value,
+                municipality: document.getElementById('reg-municipality').value,
+                age: document.getElementById('reg-age').value,
+                gender: document.querySelector('input[name="sex"]:checked')?.value,
+                languages: [],
+                interests: document.querySelector('textarea[placeholder*="sport"]')?.value,
+                experience: document.querySelector('textarea[placeholder*="socialt"]')?.value
+            };
+            
+            // Add selected languages
+            if (document.getElementById('lang-svenska').checked) formData.languages.push('Svenska');
+            if (document.getElementById('lang-engelska').checked) formData.languages.push('Engelska');
+            if (document.getElementById('lang-arabiska').checked) formData.languages.push('Arabiska');
+            if (document.getElementById('lang-spanska').checked) formData.languages.push('Spanska');
+            
+            // Validate required fields
+            if (!formData.name || !formData.email || !formData.age) {
+                alert('Vänligen fyll i alla obligatoriska fält (namn, e-post, ålder).');
+                return;
+            }
+            
+            // In a real application, you would send this to your backend
+            console.log('Application data:', formData);
+            
+            // Show success message
+            alert('Ansökan har skickats! Vi kommer att kontakta dig inom kort.');
+            
+            // Redirect to landing page
+            showPage('page-landing');
+        }
+    </script>
 </body></html>

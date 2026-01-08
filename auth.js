@@ -194,24 +194,27 @@ class AuthManager {
         const adminMenuItems = document.querySelectorAll('.admin-only');
         const adminPages = document.querySelectorAll('.admin-page');
 
+        console.log('Updating admin access. Is admin:', this.isAdmin());
+
         if (this.isAdmin()) {
             // Show admin menu items
             adminMenuItems.forEach(item => item.classList.remove('hidden'));
             
-            // Enable admin pages
-            adminPages.forEach(page => page.dataset.accessible = 'true');
+            // Enable admin pages - remove hidden class
+            adminPages.forEach(page => {
+                page.classList.remove('hidden');
+                page.dataset.accessible = 'true';
+                console.log('Admin page made accessible:', page.id);
+            });
         } else {
             // Hide admin menu items
             adminMenuItems.forEach(item => item.classList.add('hidden'));
             
-            // Disable admin pages
-            adminPages.forEach(page => page.dataset.accessible = 'false');
-            
-            // If currently on admin page, redirect
-            if (typeof platform !== 'undefined' && platform.currentPage === 'page-admin') {
-                platform.showPage('page-landing');
-                alert('Du har inte behörighet att komma åt denna sida.');
-            }
+            // Disable admin pages - add hidden class
+            adminPages.forEach(page => {
+                page.classList.add('hidden');
+                page.dataset.accessible = 'false';
+            });
         }
     }
 
@@ -266,17 +269,24 @@ function handleLogin(event) {
     const result = authManager.login(email, password, role);
     
     if (result.success) {
-        // Redirect based on role
-        if (role === 'admin') {
-            platform.showPage('page-admin');
-        } else if (role === 'social_worker') {
-            platform.showPage('page-dashboard');
-        } else {
-            platform.showPage('page-landing');
-        }
+        console.log('Login successful. Role:', role, 'User:', result.user);
         
         // Show success message
         showNotification('Inloggning lyckades!', 'success');
+        
+        // Redirect based on role with a slight delay
+        setTimeout(() => {
+            if (role === 'admin') {
+                console.log('Redirecting to admin dashboard...');
+                platform.showPage('page-admin');
+            } else if (role === 'social_worker') {
+                console.log('Redirecting to social worker dashboard...');
+                platform.showPage('page-dashboard');
+            } else {
+                console.log('Redirecting to landing page...');
+                platform.showPage('page-landing');
+            }
+        }, 500);
     } else {
         showNotification('Inloggning misslyckades. Kontrollera dina uppgifter.', 'error');
     }

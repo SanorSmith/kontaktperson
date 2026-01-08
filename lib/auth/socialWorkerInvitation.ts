@@ -288,7 +288,7 @@ export async function validateInvitationToken(token: string) {
         municipality_id: result.municipality_id,
         municipality_name: result.municipality_name,
         department: result.department,
-        position: result.position,
+        position: result.job_position,
         access_level: result.access_level,
         expires_at: result.expires_at
       }
