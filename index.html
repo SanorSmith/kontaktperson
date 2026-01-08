@@ -448,52 +448,112 @@
         /* Responsive design */
         @media (max-width: 1023px) {
             .sweden-map-container {
-                width: 70vw;
-                height: 60vh;
+                width: 80vw;
+                height: 55vh;
             }
 
-            .volunteer-button {
-                bottom: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                right: auto;
+            .button-container {
+                flex-direction: column;
+                gap: 12px;
+                bottom: 16px;
+            }
+
+            .volunteer-button button,
+            .social-worker-button button {
+                min-width: 160px;
+                height: 48px;
+                font-size: 16px;
+            }
+
+            .volunteer-button .subtext,
+            .social-worker-button .subtext {
+                font-size: 12px;
             }
         }
 
         @media (max-width: 767px) {
             .sweden-map-container {
-                width: 90vw;
+                width: 95vw;
                 height: 50vh;
+                border-radius: 12px;
             }
 
-            .volunteer-button {
-                bottom: 20px;
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+                bottom: 12px;
+                width: 90%;
+                max-width: 280px;
             }
 
-            .volunteer-button button {
-                min-width: 180px;
-                height: 48px;
-                font-size: 16px;
+            .volunteer-button,
+            .social-worker-button {
+                width: 100%;
+            }
+
+            .volunteer-button button,
+            .social-worker-button button {
+                width: 100%;
+                min-width: auto;
+                height: 52px;
+                font-size: 15px;
+                padding: 12px 20px;
+            }
+
+            .volunteer-button .subtext,
+            .social-worker-button .subtext {
+                font-size: 11px;
+                margin-top: 4px;
             }
 
             .platform-logo {
-                top: 16px;
-                left: 16px;
+                top: 12px;
+                left: 12px;
+            }
+
+            .platform-logo .icon {
+                width: 28px;
+                height: 28px;
             }
 
             .platform-logo .text {
-                font-size: 16px;
+                font-size: 14px;
             }
 
             .region-modal,
             .auth-modal,
             .profile-view {
-                padding: 24px;
-                max-width: 90vw;
+                padding: 20px;
+                max-width: 95vw;
+                max-height: 85vh;
             }
 
             .volunteer-grid {
                 grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .sweden-map-container {
+                width: 98vw;
+                height: 45vh;
+            }
+
+            .button-container {
+                bottom: 8px;
+                gap: 8px;
+                max-width: 260px;
+            }
+
+            .volunteer-button button,
+            .social-worker-button button {
+                height: 48px;
+                font-size: 14px;
+                padding: 10px 16px;
+            }
+
+            .platform-logo .text {
+                display: none;
             }
         }
     </style>
