@@ -1,152 +1,93 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { MapPin, Users, Shield, ArrowRight } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import Link from 'next/link';
+import { Users, Search, UserPlus, ArrowRight } from 'lucide-react';
+
+const CleanSwedenMap = dynamic(
+  () => import('./components/CleanSwedenMap'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center bg-[#F8F9FA]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-[#003D5C] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-[#003D5C] font-medium">Laddar karta...</p>
+        </div>
+      </div>
+    )
+  }
+);
 
 export default function HomePage() {
-  const router = useRouter();
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-deep-blue via-warm-teal to-deep-blue">
-      <div className="min-h-screen bg-white/90 backdrop-blur-sm">
-        {/* Header */}
-        <header className="bg-deep-blue text-white py-4 border-b border-white/10">
-          <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-                <Users size={24} />
-              </div>
-              <span className="font-bold text-xl">Kontaktperson Platform</span>
+    <div className="h-screen w-screen overflow-hidden bg-[#F8F9FA] flex flex-col">
+      {/* Header */}
+      <header className="bg-[#003D5C] text-white py-3 px-4 md:px-6 z-[1001] flex justify-between items-center">
+        <Link 
+          href="/"
+          className="flex items-center gap-2 md:gap-3 cursor-pointer hover:opacity-90 transition"
+        >
+          <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+            <Users size={18} className="text-white" />
+          </div>
+          <span className="font-semibold text-base md:text-lg">Kontaktperson Platform</span>
+        </Link>
+        
+        <nav className="hidden md:flex gap-6 text-sm font-medium text-white/90">
+          <Link href="/" className="hover:text-white transition">Karta</Link>
+          <Link href="/for-volontarer" className="hover:text-white transition">För Volontärer</Link>
+          <Link href="/for-socialsekreterare" className="hover:text-white transition">För Socialsekreterare</Link>
+        </nav>
+
+        <div className="flex gap-2 md:gap-3">
+          <Link 
+            href="/login"
+            className="bg-white text-[#003D5C] px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold hover:shadow-lg transition"
+          >
+            Logga in
+          </Link>
+          <Link 
+            href="/registrera"
+            className="bg-[#F39C12] text-white px-3 md:px-4 py-2 rounded-lg text-xs md:text-sm font-semibold hover:bg-[#E67E22] transition hidden sm:block"
+          >
+            Bli kontaktperson
+          </Link>
+        </div>
+      </header>
+      
+      {/* Main Map - Full Screen */}
+      <div className="flex-1 relative">
+        <CleanSwedenMap />
+        
+        {/* Centered Action Buttons - Responsive */}
+        <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-[1001] flex flex-col sm:flex-row gap-3 md:gap-4 w-[90%] sm:w-auto max-w-lg">
+          {/* Volunteer Button - Links to registration form */}
+          <Link
+            href="/registrera"
+            className="flex-1 sm:flex-none bg-[#F39C12] hover:bg-[#E67E22] text-white px-4 md:px-6 py-3 md:py-4 rounded-xl shadow-lg transition transform hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2 md:gap-3"
+          >
+            <UserPlus size={20} className="md:w-6 md:h-6" />
+            <div className="text-left">
+              <span className="block text-sm md:text-base font-bold">Bli kontaktperson</span>
+              <span className="block text-xs opacity-90 hidden sm:block">Registrera dig som volontär</span>
             </div>
-            <button
-              onClick={() => router.push('/search')}
-              className="bg-warm-orange text-white px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition-opacity"
-            >
-              Sök Volontärer
-            </button>
-          </div>
-        </header>
-
-        {/* Hero Section */}
-        <section className="py-20 px-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h1 className="text-5xl font-bold text-deep-blue mb-6 leading-tight">
-                  Hitta rätt kontaktperson för dina klienter
-                </h1>
-                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                  En interaktiv karta över hela Sverige som hjälper dig att hitta verifierade volontärer baserat på plats, intressen och tillgänglighet.
-                </p>
-                <button
-                  onClick={() => router.push('/search')}
-                  className="bg-deep-blue text-white px-8 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity flex items-center gap-2 shadow-lg"
-                >
-                  Utforska kartan
-                  <ArrowRight size={20} />
-                </button>
-              </div>
-              <div className="relative">
-                <div className="bg-gradient-to-br from-soft-blue to-white rounded-2xl p-8 shadow-2xl border border-gray-200">
-                  <div className="aspect-square bg-white rounded-xl p-6 flex items-center justify-center">
-                    <MapPin size={120} className="text-warm-orange" />
-                  </div>
-                  <div className="mt-6 space-y-3">
-                    <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
-                      <div className="w-10 h-10 rounded-full bg-success-green/20 flex items-center justify-center">
-                        <Users size={20} className="text-success-green" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-deep-blue">150+ Volontärer</p>
-                        <p className="text-xs text-gray-500">Över hela Sverige</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3 bg-white rounded-lg p-3 shadow-sm">
-                      <div className="w-10 h-10 rounded-full bg-warm-orange/20 flex items-center justify-center">
-                        <Shield size={20} className="text-warm-orange" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-deep-blue">100% Verifierade</p>
-                        <p className="text-xs text-gray-500">Säkra matchningar</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <ArrowRight size={16} className="ml-1 hidden sm:block" />
+          </Link>
+          
+          {/* Social Worker Login Button - Links to login */}
+          <Link
+            href="/login"
+            className="flex-1 sm:flex-none bg-[#003D5C] hover:bg-[#004e75] text-white px-4 md:px-6 py-3 md:py-4 rounded-xl shadow-lg transition transform hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2 md:gap-3"
+          >
+            <Search size={20} className="md:w-6 md:h-6" />
+            <div className="text-left">
+              <span className="block text-sm md:text-base font-bold">Sök volontärer</span>
+              <span className="block text-xs opacity-80 hidden sm:block">Logga in som socialsekreterare</span>
             </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="py-20 px-6 bg-gray-50">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-3xl font-bold text-deep-blue text-center mb-12">
-              Funktioner
-            </h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white rounded-xl p-8 shadow-md hover:shadow-xl transition-shadow">
-                <div className="w-14 h-14 rounded-lg bg-soft-blue flex items-center justify-center mb-4">
-                  <MapPin size={28} className="text-warm-teal" />
-                </div>
-                <h3 className="text-xl font-semibold text-deep-blue mb-3">
-                  Interaktiv Karta
-                </h3>
-                <p className="text-gray-600">
-                  Klicka på kommuner för att filtrera volontärer. Hover för att se detaljer direkt på kartan.
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-8 shadow-md hover:shadow-xl transition-shadow">
-                <div className="w-14 h-14 rounded-lg bg-soft-blue flex items-center justify-center mb-4">
-                  <Users size={28} className="text-warm-teal" />
-                </div>
-                <h3 className="text-xl font-semibold text-deep-blue mb-3">
-                  Detaljerade Profiler
-                </h3>
-                <p className="text-gray-600">
-                  Se intressen, språk, tillgänglighet och erfarenhet för varje volontär.
-                </p>
-              </div>
-              <div className="bg-white rounded-xl p-8 shadow-md hover:shadow-xl transition-shadow">
-                <div className="w-14 h-14 rounded-lg bg-soft-blue flex items-center justify-center mb-4">
-                  <Shield size={28} className="text-warm-teal" />
-                </div>
-                <h3 className="text-xl font-semibold text-deep-blue mb-3">
-                  Säker Matchning
-                </h3>
-                <p className="text-gray-600">
-                  Alla volontärer är verifierade och granskade för trygg kontaktpersonskap.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold text-deep-blue mb-6">
-              Redo att hitta rätt kontaktperson?
-            </h2>
-            <p className="text-xl text-gray-600 mb-8">
-              Börja utforska kartan och hitta volontärer i din kommun idag.
-            </p>
-            <button
-              onClick={() => router.push('/search')}
-              className="bg-warm-orange text-white px-10 py-4 rounded-lg font-semibold text-lg hover:opacity-90 transition-opacity shadow-lg"
-            >
-              Kom igång nu
-            </button>
-          </div>
-        </section>
-
-        {/* Footer */}
-        <footer className="bg-deep-blue text-white py-8 px-6">
-          <div className="max-w-7xl mx-auto text-center">
-            <p className="text-white/70">
-              © 2026 Kontaktperson Platform. Alla rättigheter förbehållna.
-            </p>
-          </div>
-        </footer>
+            <ArrowRight size={16} className="ml-1 hidden sm:block" />
+          </Link>
+        </div>
       </div>
     </div>
   );

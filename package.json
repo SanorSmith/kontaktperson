@@ -6,27 +6,30 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "create-admin": "npx tsx scripts/create-admin.ts"
   },
   "dependencies": {
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "next": "^14.2.0",
+    "@supabase/supabase-js": "^2.39.0",
     "leaflet": "^1.9.4",
+    "lucide-react": "^0.263.1",
+    "next": "14.2.35",
+    "react": "^18",
+    "react-dom": "^18",
     "react-leaflet": "^4.2.1",
-    "react-leaflet-cluster": "^2.1.0",
-    "lucide-react": "^0.263.1"
+    "recharts": "^2.10.0"
   },
   "devDependencies": {
-    "typescript": "^5.3.3",
-    "@types/node": "^20.11.0",
-    "@types/react": "^18.2.48",
-    "@types/react-dom": "^18.2.18",
-    "@types/leaflet": "^1.9.8",
-    "autoprefixer": "^10.4.17",
-    "postcss": "^8.4.33",
-    "tailwindcss": "^3.4.1",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "^14.2.0"
+    "@types/leaflet": "^1.9.3",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.35",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5"
   }
 }
