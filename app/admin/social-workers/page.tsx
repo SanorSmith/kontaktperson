@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
 import {
   Search,
@@ -54,20 +53,26 @@ const accessLevels = [
 ];
 
 export default function SocialWorkersPage() {
-  const searchParams = useSearchParams();
-  const initialFilter = searchParams.get('filter') || 'all';
-  
   const [socialWorkers, setSocialWorkers] = useState<SocialWorker[]>([]);
   const [filteredWorkers, setFilteredWorkers] = useState<SocialWorker[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterMunicipality, setFilterMunicipality] = useState('Alla');
-  const [filterStatus, setFilterStatus] = useState(initialFilter);
+  const [filterStatus, setFilterStatus] = useState('all');
   const [filterAccessLevel, setFilterAccessLevel] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const pageSize = 20;
+
+  // Get filter param from URL on client side only
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const filter = params.get('filter');
+    if (filter) {
+      setFilterStatus(filter);
+    }
+  }, []);
 
   // Fetch social workers from Supabase
   useEffect(() => {
