@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { createClient } from '@supabase/supabase-js';
@@ -53,7 +53,18 @@ const accessLevels = [
   { value: 'admin', label: 'Admin' }
 ];
 
-export default function SocialWorkersPage() {
+// Loading fallback for Suspense
+function SocialWorkersLoading() {
+  return (
+    <div className="flex items-center justify-center py-12">
+      <Loader2 size={32} className="animate-spin text-[#003D5C]" />
+      <span className="ml-3 text-gray-600">Laddar...</span>
+    </div>
+  );
+}
+
+// Main component that uses useSearchParams
+function SocialWorkersContent() {
   const searchParams = useSearchParams();
   const initialFilter = searchParams.get('filter') || 'all';
   
@@ -442,5 +453,14 @@ export default function SocialWorkersPage() {
         )}
       </div>
     </div>
+  );
+}
+
+// Export default with Suspense wrapper
+export default function SocialWorkersPage() {
+  return (
+    <Suspense fallback={<SocialWorkersLoading />}>
+      <SocialWorkersContent />
+    </Suspense>
   );
 }

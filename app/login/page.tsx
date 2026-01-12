@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { Users, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -15,9 +15,9 @@ if (supabaseUrl && supabaseAnonKey && supabaseUrl.startsWith('http')) {
   supabase = createClient(supabaseUrl, supabaseAnonKey);
 }
 
-// Helper to set cookie for demo mode
-function setDemoCookie(role: string) {
-  document.cookie = `demo-user-role=${role}; path=/; max-age=86400`;
+// Helper to set user role cookie for middleware authentication
+function setUserRoleCookie(role: string) {
+  document.cookie = `user-role=${role}; path=/; max-age=86400`;
 }
 
 // Helper to get redirect path based on role
@@ -34,7 +34,17 @@ function getRedirectPath(role: string): string {
   }
 }
 
-export default function LoginPage() {
+// Loading fallback for Suspense
+function LoginLoading() {
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#003D5C] to-[#006B7D] flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+}
+
+// Main login form component that uses useSearchParams
+function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect');
@@ -97,7 +107,7 @@ export default function LoginPage() {
       }
       
       // Set cookie for middleware
-      setDemoCookie(role);
+      setUserRoleCookie(role);
       
       // Store user info
       localStorage.setItem('currentUser', JSON.stringify({
@@ -259,5 +269,14 @@ export default function LoginPage() {
         </p>
       </footer>
     </div>
+  );
+}
+
+// Export default with Suspense wrapper
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginLoading />}>
+      <LoginForm />
+    </Suspense>
   );
 }
