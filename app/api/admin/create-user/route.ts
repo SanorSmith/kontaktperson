@@ -1,75 +1,68 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Use service role key for admin operations
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { email, password, fullName, role, municipality, department, accessLevel, employeeId, phone } = body;
+    const { email, privateEmail, password, fullName, role, municipality, department, accessLevel, employeeId, phone } = body;
 
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password required' }, { status: 400 });
+    if (!email || !password || !fullName || !role) {
+      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Create admin client with service role
     const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
-      }
+      auth: { autoRefreshToken: false, persistSession: false }
     });
 
-    // Create user without sending email
+    // Create user in auth
     const { data: authData, error: authError } = await supabaseAdmin.auth.admin.createUser({
       email,
       password,
-      email_confirm: true, // Auto-confirm email (no email sent)
-      user_metadata: {
-        full_name: fullName,
-        role: role || 'social_worker'
-      }
+      email_confirm: true
     });
 
     if (authError) {
       console.error('Auth error:', authError);
-      return NextResponse.json({ error: authError.message }, { status: 400 });
+      return NextResponse.json({ error: 'Failed to create user: ' + authError.message }, { status: 400 });
     }
 
-    if (!authData.user) {
-      return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
-    }
+    const userId = authData.user.id;
 
     // Create profile
     const { error: profileError } = await supabaseAdmin
       .from('profiles')
       .insert({
-        id: authData.user.id,
+        id: userId,
         email: email,
         full_name: fullName,
-        role: role || 'social_worker',
+        role: role,
         municipality: municipality || null,
-        must_change_password: true
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       });
 
     if (profileError) {
       console.error('Profile error:', profileError);
-      // Don't fail - profile might exist from trigger
+      await supabaseAdmin.auth.admin.deleteUser(userId);
+      return NextResponse.json({ error: 'Failed to create profile: ' + profileError.message }, { status: 400 });
     }
 
-    // Create social_worker record if role is social_worker
+    // Create social worker entry if role is social_worker
     if (role === 'social_worker') {
       const { error: swError } = await supabaseAdmin
         .from('social_workers')
         .insert({
-          id: authData.user.id,
-          employee_id: employeeId || null,
-          department: department || 'Socialtjänsten',
+          id: userId,
+          department: department || null,
           phone_work: phone || null,
+          employee_id: employeeId || null,
           access_level: accessLevel || 'viewer',
-          status: 'active'
+          status: 'active',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         });
 
       if (swError) {
@@ -77,12 +70,13 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    return NextResponse.json({
-      success: true,
-      user: {
-        id: authData.user.id,
-        email: authData.user.email
-      }
+    // Note: Email sending removed - implement if needed
+    console.log(`User created: ${email}, Private email: ${privateEmail || 'N/A'}`);
+
+    return NextResponse.json({ 
+      success: true, 
+      user: { id: userId, email },
+      emailSent: false 
     });
 
   } catch (error: any) {

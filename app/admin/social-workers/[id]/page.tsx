@@ -53,35 +53,6 @@ interface AuditLog {
   createdAt: string;
 }
 
-// Mock data
-const mockSocialWorker: SocialWorker = {
-  id: '1',
-  name: 'Anna Svensson',
-  email: 'anna@gmail.com',
-  workEmail: 'anna.svensson@stockholm.se',
-  phone: '+46 70 123 45 67',
-  municipality: 'Stockholm',
-  department: 'Socialtjänsten',
-  position: 'Socialsekreterare',
-  employeeNumber: 'EMP-2024-001',
-  accessLevel: 'approver',
-  status: 'verified',
-  verified: true,
-  verifiedAt: '2024-01-10',
-  invitationSentAt: '2024-01-05',
-  internalNotes: 'Erfaren socialsekreterare med 5 års erfarenhet.',
-  createdAt: '2024-01-05',
-  updatedAt: '2024-01-12',
-  lastLoginAt: '2024-01-12 09:30'
-};
-
-const mockAuditLogs: AuditLog[] = [
-  { id: '1', action: 'login_success', performedBy: 'Anna Svensson', details: 'Lyckad inloggning', createdAt: '2024-01-12 09:30' },
-  { id: '2', action: 'volunteer_approved', performedBy: 'Anna Svensson', details: 'Godkände volontär Erik Johansson', createdAt: '2024-01-11 14:22' },
-  { id: '3', action: 'profile_updated', performedBy: 'Admin', details: 'Uppdaterade behörighetsnivå till Approver', createdAt: '2024-01-10 11:00' },
-  { id: '4', action: 'invitation_accepted', performedBy: 'Anna Svensson', details: 'Accepterade inbjudan och skapade konto', createdAt: '2024-01-10 10:15' },
-  { id: '5', action: 'invitation_created', performedBy: 'Admin', details: 'Skickade inbjudan till anna.svensson@stockholm.se', createdAt: '2024-01-05 09:00' },
-];
 
 export default function SocialWorkerDetailPage() {
   const params = useParams();
@@ -95,12 +66,53 @@ export default function SocialWorkerDetailPage() {
   const [deactivateReason, setDeactivateReason] = useState('');
 
   useEffect(() => {
-    // Simulate loading data
-    setTimeout(() => {
-      setWorker(mockSocialWorker);
-      setAuditLogs(mockAuditLogs);
-      setIsLoading(false);
-    }, 500);
+    async function fetchSocialWorker() {
+      if (!params.id) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/admin/get-user?userId=${params.id}`);
+        const result = await response.json();
+
+        if (!response.ok) {
+          console.error('Error fetching user:', result.error);
+          setIsLoading(false);
+          return;
+        }
+
+        const { profile, socialWorker: swData } = result;
+
+        const workerData: SocialWorker = {
+          id: profile.id,
+          name: profile.full_name || profile.email?.split('@')[0] || 'Okänt namn',
+          email: profile.email || '',
+          workEmail: profile.email || '',
+          phone: swData?.phone_work || '',
+          municipality: profile.municipality || 'Okänd',
+          department: swData?.department || 'Socialtjänsten',
+          position: 'Socialsekreterare',
+          employeeNumber: swData?.employee_id || '',
+          accessLevel: swData?.access_level || 'viewer',
+          status: swData?.status === 'active' ? 'verified' : 'pending',
+          verified: swData?.status === 'active',
+          verifiedAt: profile.created_at?.split('T')[0],
+          createdAt: profile.created_at?.split('T')[0] || '',
+          updatedAt: profile.updated_at?.split('T')[0] || '',
+          lastLoginAt: swData?.last_login?.split('T')[0] || undefined
+        };
+
+        setWorker(workerData);
+        setAuditLogs([]);
+      } catch (err) {
+        console.error('Error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchSocialWorker();
   }, [params.id]);
 
   const getStatusBadge = (status: string) => {
@@ -135,19 +147,132 @@ export default function SocialWorkerDetailPage() {
   };
 
   const handleDeactivate = async () => {
-    console.log('Deactivating with reason:', deactivateReason);
-    setShowDeactivateModal(false);
-    // Update status in database
+    if (!params.id) return;
+
+    try {
+      const newStatus = worker?.status === 'inactive' ? 'active' : 'inactive';
+      
+      const response = await fetch('/api/admin/update-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: params.id,
+          socialWorkerData: { status: newStatus }
+        })
+      });
+
+      if (!response.ok) {
+        const result = await response.json();
+        alert('Kunde inte uppdatera status: ' + (result.error || 'Okänt fel'));
+        return;
+      }
+
+      setShowDeactivateModal(false);
+      window.location.reload();
+    } catch (err) {
+      console.error('Error:', err);
+      alert('Ett fel uppstod.');
+    }
   };
 
   const handleDelete = async () => {
-    console.log('Deleting social worker...');
+    console.log('=== DELETE BUTTON CLICKED ===');
+    
+    if (!params.id) {
+      console.error('No user ID found');
+      return;
+    }
+
+    const userName = worker?.name || 'Användaren';
+    console.log('Deleting user:', userName, 'ID:', params.id);
+    
     setShowDeleteModal(false);
-    router.push('/admin/social-workers?deleted=true');
+
+    try {
+      console.log('Step 1: Calling delete API...');
+      
+      // Delete the user
+      const response = await fetch('/api/admin/delete-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: params.id })
+      });
+
+      const result = await response.json();
+      console.log('Step 2: Delete API response:', result);
+
+      if (!response.ok) {
+        console.error('Delete failed:', result.error);
+        window.alert('❌ Kunde inte ta bort användaren: ' + (result.error || 'Okänt fel'));
+        return;
+      }
+
+      console.log('Step 3: Delete successful, verifying...');
+      
+      // Verify deletion by checking database
+      const verifyResponse = await fetch('/api/admin/get-user?userId=' + params.id);
+      console.log('Step 4: Verification response status:', verifyResponse.status);
+      
+      // If user is deleted, API returns 404 (not found) - this is success!
+      if (verifyResponse.status === 404) {
+        console.log('Step 5: User confirmed deleted (404)');
+        
+        // Fetch all remaining users from database
+        console.log('Step 6: Fetching remaining users from database...');
+        const allUsersResponse = await fetch('/api/admin/get-social-workers');
+        const allUsersResult = await allUsersResponse.json();
+        
+        const remainingUsers = allUsersResult.socialWorkers || [];
+        console.log('Remaining users in database:', remainingUsers);
+        
+        // Build message with database status
+        let message = `✅ ${userName} har tagits bort permanent från databasen!\n\n`;
+        message += `📊 DATABAS STATUS:\n`;
+        message += `Antal användare kvar: ${remainingUsers.length}\n\n`;
+        
+        if (remainingUsers.length > 0) {
+          message += `Kvarvarande användare:\n`;
+          remainingUsers.forEach((user: any, index: number) => {
+            message += `${index + 1}. ${user.name} (${user.email})\n`;
+          });
+        } else {
+          message += `✓ Databasen är tom - inga användare kvar`;
+        }
+        
+        console.log('Showing success message with database status');
+        window.alert(message);
+        
+        console.log('Step 7: Redirecting to list...');
+        setTimeout(() => {
+          window.location.href = '/admin/social-workers';
+        }, 100);
+        return;
+      }
+      
+      console.log('Step 5: Checking if user still exists...');
+      // If we get here, user still exists (bad!)
+      const verifyResult = await verifyResponse.json();
+      if (verifyResponse.ok && verifyResult.user) {
+        console.error('User still exists in database!');
+        window.alert('⚠️ Varning: Användaren kunde inte tas bort från databasen!');
+        return;
+      }
+
+      // Default success case
+      console.log('Step 6: Default success case');
+      window.alert(`✅ ${userName} har tagits bort permanent från databasen!`);
+      setTimeout(() => {
+        window.location.href = '/admin/social-workers';
+      }, 100);
+    } catch (err) {
+      console.error('Delete error:', err);
+      window.alert('❌ Ett fel uppstod vid borttagning: ' + err);
+    }
   };
 
   const handleResetPassword = async () => {
-    console.log('Resetting password...');
+    if (!worker?.email) return;
+    alert(`Lösenordsåterställning för ${worker.email} måste göras via Supabase Dashboard.`);
     // Send password reset email
   };
 

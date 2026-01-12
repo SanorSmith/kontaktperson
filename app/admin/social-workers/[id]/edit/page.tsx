@@ -61,22 +61,47 @@ export default function EditSocialWorkerPage() {
   });
 
   useEffect(() => {
-    // Load existing data
-    setTimeout(() => {
-      setFormData({
-        fullName: 'Anna Svensson',
-        email: 'anna@gmail.com',
-        workEmail: 'anna.svensson@stockholm.se',
-        phone: '+46 70 123 45 67',
-        municipalityId: '1',
-        department: 'Socialtjänsten',
-        position: 'Socialsekreterare',
-        employeeNumber: 'EMP-2024-001',
-        accessLevel: 'approver',
-        internalNotes: 'Erfaren socialsekreterare med 5 års erfarenhet.'
-      });
-      setIsLoading(false);
-    }, 500);
+    async function fetchSocialWorker() {
+      if (!params.id) {
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/admin/get-user?userId=${params.id}`);
+        const result = await response.json();
+
+        if (!response.ok) {
+          console.error('Error fetching user:', result.error);
+          setErrors({ submit: 'Kunde inte hitta användaren.' });
+          setIsLoading(false);
+          return;
+        }
+
+        const { profile, socialWorker: swData } = result;
+        const municipalityMatch = municipalities.find(m => m.name === profile.municipality);
+
+        setFormData({
+          fullName: profile.full_name || '',
+          email: profile.email || '',
+          workEmail: profile.email || '',
+          phone: swData?.phone_work || '',
+          municipalityId: municipalityMatch?.id || '',
+          department: swData?.department || '',
+          position: 'Socialsekreterare',
+          employeeNumber: swData?.employee_id || '',
+          accessLevel: swData?.access_level || 'viewer',
+          internalNotes: ''
+        });
+      } catch (err) {
+        console.error('Error:', err);
+        setErrors({ submit: 'Ett fel uppstod vid hämtning av data.' });
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchSocialWorker();
   }, [params.id]);
 
   const validateForm = (): boolean => {
@@ -120,12 +145,39 @@ export default function EditSocialWorkerPage() {
     setIsSubmitting(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Updating social worker:', formData);
+      if (!params.id) {
+        throw new Error('Användar-ID saknas.');
+      }
+
+      const response = await fetch('/api/admin/update-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: params.id,
+          profileData: {
+            full_name: formData.fullName,
+            email: formData.workEmail, // Use workEmail as the primary email
+            municipality: municipalities.find(m => m.id === formData.municipalityId)?.name || ''
+          },
+          socialWorkerData: {
+            department: formData.department,
+            phone_work: formData.phone,
+            employee_id: formData.employeeNumber || null,
+            access_level: formData.accessLevel
+          }
+        })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Kunde inte uppdatera profilen.');
+      }
+
       router.push(`/admin/social-workers/${params.id}?updated=true`);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating social worker:', error);
-      setErrors({ submit: 'Ett fel uppstod. Försök igen.' });
+      setErrors({ submit: error.message || 'Ett fel uppstod. Försök igen.' });
     } finally {
       setIsSubmitting(false);
     }

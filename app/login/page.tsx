@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { Users, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -34,7 +34,7 @@ function getRedirectPath(role: string): string {
   }
 }
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get('redirect');
@@ -259,5 +259,17 @@ export default function LoginPage() {
         </p>
       </footer>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-[#003D5C] to-[#006B7D] flex items-center justify-center p-4">
+        <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin" />
+      </div>
+    }>
+      <LoginContent />
+    </Suspense>
   );
 }

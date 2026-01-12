@@ -25,8 +25,7 @@ const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supa
 
 interface FormData {
   fullName: string;
-  email: string;
-  workEmail: string;
+  privateEmail: string; // Personal email for receiving login info
   phone: string;
   municipalityId: string;
   department: string;
@@ -57,8 +56,7 @@ export default function NewSocialWorkerPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
-    email: '',
-    workEmail: '',
+    privateEmail: '',
     phone: '',
     municipalityId: '',
     department: '',
@@ -68,6 +66,28 @@ export default function NewSocialWorkerPage() {
     internalNotes: ''
   });
 
+  // Auto-generate work email from name and municipality
+  const generateWorkEmail = (): string => {
+    if (!formData.fullName || !formData.municipalityId) return '';
+    
+    const municipality = municipalities.find(m => m.id === formData.municipalityId);
+    if (!municipality) return '';
+    
+    // Convert name to email format: "John Doe" -> "john.doe"
+    const emailName = formData.fullName
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '.')
+      .replace(/[^a-z.]/g, '');
+    
+    // Convert municipality name: "Stockholm" -> "stockholm"
+    const municipalityName = municipality.name.toLowerCase().replace(/[åä]/g, 'a').replace(/ö/g, 'o');
+    
+    return `${emailName}@${municipalityName}.se`;
+  };
+
+  const workEmail = generateWorkEmail();
+
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -75,21 +95,10 @@ export default function NewSocialWorkerPage() {
       newErrors.fullName = 'Fullständigt namn krävs';
     }
 
-    if (!formData.email.trim()) {
-      newErrors.email = 'E-postadress krävs';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Ogiltig e-postadress';
-    }
-
-    if (!formData.workEmail.trim()) {
-      newErrors.workEmail = 'Arbetsmail krävs';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.workEmail)) {
-      newErrors.workEmail = 'Ogiltig e-postadress';
-    } else {
-      const domain = formData.workEmail.split('@')[1];
-      if (!approvedDomains.some(d => domain?.endsWith(d))) {
-        newErrors.workEmail = 'Arbetsmail måste vara från en godkänd domän';
-      }
+    if (!formData.privateEmail.trim()) {
+      newErrors.privateEmail = 'Privat e-postadress krävs (för att ta emot inloggningsuppgifter)';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.privateEmail)) {
+      newErrors.privateEmail = 'Ogiltig e-postadress';
     }
 
     if (!formData.phone.trim()) {
@@ -122,69 +131,39 @@ export default function NewSocialWorkerPage() {
     setIsSubmitting(true);
 
     try {
-      if (!supabase) {
-        throw new Error('Databasen är inte konfigurerad.');
-      }
-
       // Generate a temporary password
       const tempPassword = Math.random().toString(36).slice(-8) + 'A1!';
       
-      // Create user in Supabase Auth
-      const { data: authData, error: authError } = await supabase.auth.signUp({
-        email: formData.workEmail,
-        password: tempPassword,
-        options: {
-          data: {
-            full_name: formData.fullName,
-            role: 'social_worker'
-          }
-        }
-      });
-
-      if (authError) {
-        throw new Error(authError.message);
-      }
-
-      if (!authData.user) {
-        throw new Error('Kunde inte skapa användare.');
-      }
-
-      // Create profile in profiles table
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .insert({
-          id: authData.user.id,
-          email: formData.workEmail,
-          full_name: formData.fullName,
+      // Use API route to create user (uses service role key and sends email)
+      const response = await fetch('/api/admin/create-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: workEmail, // Work email for login
+          privateEmail: formData.privateEmail, // Private email for receiving login info
+          password: tempPassword,
+          fullName: formData.fullName,
           role: 'social_worker',
           municipality: municipalities.find(m => m.id === formData.municipalityId)?.name || '',
-          must_change_password: true
-        });
-
-      if (profileError) {
-        console.error('Profile error:', profileError);
-        // Continue anyway - profile might be created by trigger
-      }
-
-      // Create social worker record
-      const { error: swError } = await supabase
-        .from('social_workers')
-        .insert({
-          id: authData.user.id,
-          employee_id: formData.employeeNumber || null,
           department: formData.department,
-          phone_work: formData.phone,
-          access_level: formData.accessLevel,
-          status: 'active'
-        });
+          accessLevel: formData.accessLevel,
+          employeeId: formData.employeeNumber || null,
+          phone: formData.phone || null
+        })
+      });
 
-      if (swError) {
-        console.error('Social worker error:', swError);
-        // Continue anyway
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Kunde inte skapa användare.');
       }
 
-      // Show success with temporary password
-      alert(`Användare skapad!\n\nE-post: ${formData.workEmail}\nTillfälligt lösenord: ${tempPassword}\n\nSpara detta lösenord och ge det till användaren.`);
+      // Show success message with email status
+      const emailStatus = result.emailSent 
+        ? `\n\n✅ Inloggningsuppgifter har skickats till: ${formData.privateEmail}`
+        : '\n\n⚠️ Användaren skapades men e-postmeddelandet kunde inte skickas. Spara lösenordet nedan.';
+      
+      alert(`Användare skapad!${emailStatus}\n\nArbetsmail (för inloggning): ${workEmail}\nTillfälligt lösenord: ${tempPassword}\n\nSpara detta lösenord för säkerhets skull.`);
       
       // Redirect to list with success message
       router.push('/admin/social-workers?success=created');
@@ -250,26 +229,27 @@ export default function NewSocialWorkerPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                E-postadress <span className="text-[#E74C3C]">*</span>
+                Privat e-post <span className="text-[#E74C3C]">*</span>
               </label>
               <div className="relative">
                 <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="email"
-                  value={formData.email}
-                  onChange={(e) => handleChange('email', e.target.value)}
+                  value={formData.privateEmail}
+                  onChange={(e) => handleChange('privateEmail', e.target.value)}
                   className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:ring-1 focus:ring-[#003D5C] outline-none ${
-                    errors.email ? 'border-[#E74C3C]' : 'border-gray-300 focus:border-[#003D5C]'
+                    errors.privateEmail ? 'border-[#E74C3C]' : 'border-gray-300 focus:border-[#003D5C]'
                   }`}
                   placeholder="anna@gmail.com"
                 />
               </div>
-              {errors.email && (
+              {errors.privateEmail && (
                 <p className="text-sm text-[#E74C3C] mt-1 flex items-center gap-1">
                   <AlertCircle size={14} />
-                  {errors.email}
+                  {errors.privateEmail}
                 </p>
               )}
+              <p className="text-xs text-gray-500 mt-1">För att ta emot inloggningsuppgifter</p>
             </div>
 
             <div>
@@ -309,27 +289,19 @@ export default function NewSocialWorkerPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Arbetsmail <span className="text-[#E74C3C]">*</span>
+                Arbetsmail (genereras automatiskt)
               </label>
               <div className="relative">
                 <Mail size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                 <input
                   type="email"
-                  value={formData.workEmail}
-                  onChange={(e) => handleChange('workEmail', e.target.value)}
-                  className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:ring-1 focus:ring-[#003D5C] outline-none ${
-                    errors.workEmail ? 'border-[#E74C3C]' : 'border-gray-300 focus:border-[#003D5C]'
-                  }`}
-                  placeholder="anna.svensson@stockholm.se"
+                  value={workEmail}
+                  readOnly
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 text-gray-600"
+                  placeholder="Fylls i automatiskt baserat på namn och kommun"
                 />
               </div>
-              {errors.workEmail && (
-                <p className="text-sm text-[#E74C3C] mt-1 flex items-center gap-1">
-                  <AlertCircle size={14} />
-                  {errors.workEmail}
-                </p>
-              )}
-              <p className="text-xs text-gray-500 mt-1">Måste vara från en godkänd kommunal domän</p>
+              <p className="text-xs text-gray-500 mt-1">Skapas automatiskt som: namn@kommun.se (används för inloggning)</p>
             </div>
 
             <div>

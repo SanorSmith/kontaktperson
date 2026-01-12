@@ -69,55 +69,33 @@ export default function SocialWorkersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const pageSize = 20;
 
-  // Fetch social workers from Supabase
+  // Fetch social workers from API
   useEffect(() => {
     async function fetchSocialWorkers() {
-      if (!supabase) {
-        console.log('Supabase not configured');
-        setIsLoading(false);
-        return;
-      }
-
       try {
-        // First, try to fetch all profiles to debug
-        console.log('Fetching social workers...');
-        
-        // Fetch profiles with role = 'social_worker'
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('role', 'social_worker');
+        // Use API route to fetch data (bypasses RLS)
+        const response = await fetch('/api/admin/get-social-workers');
+        const result = await response.json();
 
-        console.log('Query result:', { data, error });
-
-        if (error) {
-          console.error('Error fetching social workers:', error);
-          
-          // If RLS blocks, try fetching from social_workers table directly
-          const { data: swData, error: swError } = await supabase
-            .from('social_workers')
-            .select('*');
-          
-          console.log('Social workers table result:', { swData, swError });
+        if (!response.ok) {
+          console.error('Error fetching social workers:', result.error);
           setIsLoading(false);
           return;
         }
 
         // Transform data to match our interface
-        const workers: SocialWorker[] = (data || []).map((profile: any) => ({
-          id: profile.id,
-          name: profile.full_name || profile.email?.split('@')[0] || 'Okänt namn',
-          email: profile.email || '',
-          workEmail: profile.email || '',
-          municipality: profile.municipality || 'Okänd',
-          department: 'Socialtjänsten',
-          position: 'Socialsekreterare',
-          accessLevel: 'viewer',
-          status: 'verified',
-          createdAt: profile.created_at?.split('T')[0] || new Date().toISOString().split('T')[0]
+        const workers: SocialWorker[] = (result.socialWorkers || []).map((sw: any) => ({
+          id: sw.id,
+          name: sw.name || 'Okänt namn',
+          email: sw.email || '',
+          workEmail: sw.email || '',
+          municipality: sw.municipality || 'Okänd',
+          department: sw.department || 'Socialtjänsten',
+          position: sw.position || 'Socialsekreterare',
+          accessLevel: sw.accessLevel || 'viewer',
+          status: sw.status === 'active' ? 'verified' : (sw.status || 'pending'),
+          createdAt: sw.createdAt || new Date().toISOString().split('T')[0]
         }));
-
-        console.log('Transformed workers:', workers);
         setSocialWorkers(workers);
         setFilteredWorkers(workers);
       } catch (err) {
