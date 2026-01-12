@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Users, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client only if credentials are available
@@ -36,18 +36,13 @@ function getRedirectPath(role: string): string {
 
 export default function LoginPage() {
   const router = useRouter();
-  const [redirectTo, setRedirectTo] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get('redirect');
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
-  // Get redirect param from URL on client side only
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setRedirectTo(params.get('redirect'));
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
