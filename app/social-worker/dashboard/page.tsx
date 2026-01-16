@@ -199,7 +199,7 @@ export default function SocialWorkerDashboard() {
                   </div>
                   <div className="flex items-center gap-3">
                     <div className="hidden sm:flex flex-wrap gap-1">
-                      {app.languages.slice(0, 2).map((lang) => (
+                      {app.languages.slice(0, 2).map((lang: string) => (
                         <span key={lang} className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">
                           {lang}
                         </span>
