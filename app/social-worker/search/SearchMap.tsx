@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { MapContainer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -22,43 +22,23 @@ interface SearchMapProps {
   onSelectVolunteer: (volunteer: Volunteer | null) => void;
 }
 
-// Get volunteer count for a municipality
+interface GeoJSONData {
+  type: string;
+  features: any[];
+}
+
+// Get volunteer count per municipality
 const getVolunteerCountByMunicipality = (volunteers: Volunteer[], municipalityName: string): number => {
   return volunteers.filter(v => v.municipality === municipalityName).length;
 };
 
 // Get color based on volunteer count
 const getColorByCount = (count: number): string => {
-  if (count >= 30) return '#003D5C'; // Dark blue - high
-  if (count >= 15) return '#006B7D'; // Teal - medium-high
-  if (count >= 5) return '#2C3E50';  // Dark grey-blue - medium
-  if (count >= 1) return '#4A6572';  // Light grey-blue - low
-  return '#6B7B8A';                  // Lightest - none/very low
-};
-
-// Style functions based on volunteer count
-const getDefaultStyle = (count: number): L.PathOptions => ({
-  fillColor: getColorByCount(count),
-  fillOpacity: 0.9,
-  color: '#1A252F',
-  weight: 0.5,
-  opacity: 1
-});
-
-const getHoverStyle = (count: number): L.PathOptions => ({
-  fillColor: getColorByCount(count),
-  fillOpacity: 1,
-  color: '#F39C12',
-  weight: 2,
-  opacity: 1
-});
-
-const selectedStyle: L.PathOptions = {
-  fillColor: '#F39C12',
-  fillOpacity: 0.9,
-  color: '#003D5C',
-  weight: 3,
-  opacity: 1
+  if (count >= 30) return '#003D5C';
+  if (count >= 15) return '#006B7D';
+  if (count >= 5) return '#2C3E50';
+  if (count >= 1) return '#4A6572';
+  return '#6B7B8A';
 };
 
 // Map controls component
@@ -99,20 +79,24 @@ function MapControls() {
 }
 
 // Volunteer markers component
-function VolunteerMarkers({ volunteers, selectedVolunteer, onSelectVolunteer }: { volunteers: Volunteer[]; selectedVolunteer: Volunteer | null; onSelectVolunteer: (v: Volunteer) => void }) {
+function VolunteerMarkers({ volunteers, selectedVolunteer, onSelectVolunteer }: SearchMapProps) {
   const map = useMap();
+  const markersRef = useRef<L.LayerGroup | null>(null);
 
   useEffect(() => {
-    const markers: L.Marker[] = [];
+    if (!markersRef.current) {
+      markersRef.current = L.layerGroup().addTo(map);
+    }
 
-    volunteers.forEach((volunteer) => {
-      if (!volunteer.latitude || !volunteer.longitude) return;
+    const markers = markersRef.current;
+    markers.clearLayers();
 
-      const isSelected = selectedVolunteer?.id === volunteer.id;
-      const color = volunteer.status === 'approved' ? '#006B7D' : '#F39C12';
+    // Create custom icon
+    const createIcon = (isSelected: boolean, status: string) => {
+      const color = status === 'approved' ? '#006B7D' : '#F39C12';
       const size = isSelected ? 40 : 30;
-
-      const icon = L.divIcon({
+      
+      return L.divIcon({
         className: 'custom-marker',
         html: `
           <div style="
@@ -127,7 +111,9 @@ function VolunteerMarkers({ volunteers, selectedVolunteer, onSelectVolunteer }: 
             justify-content: center;
             color: white;
             font-weight: bold;
+            font-size: ${isSelected ? '16px' : '12px'};
             transform: translate(-50%, -50%);
+            cursor: pointer;
           ">
             <svg width="${size * 0.5}" height="${size * 0.5}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
@@ -138,45 +124,69 @@ function VolunteerMarkers({ volunteers, selectedVolunteer, onSelectVolunteer }: 
         iconSize: [size, size],
         iconAnchor: [size / 2, size / 2],
       });
+    };
 
+    // Add markers for each volunteer
+    volunteers.forEach((volunteer) => {
+      if (!volunteer.latitude || !volunteer.longitude) return;
+
+      const isSelected = selectedVolunteer?.id === volunteer.id;
       const marker = L.marker([volunteer.latitude, volunteer.longitude], {
-        icon,
-        zIndexOffset: 1000
+        icon: createIcon(isSelected, volunteer.status),
+        zIndexOffset: isSelected ? 1000 : 0
       });
 
-      marker.bindPopup(`
-        <div style="min-width: 150px;">
-          <strong>${volunteer.full_name}</strong><br/>
-          <span style="color: #666;">${volunteer.municipality}</span><br/>
-          <span style="font-size: 12px;">${volunteer.languages.join(', ')}</span>
-        </div>
-      `);
+      marker.bindTooltip(
+        `<div class="font-semibold">${volunteer.full_name}</div>
+         <div class="text-xs text-gray-600">${volunteer.municipality}</div>`,
+        {
+          sticky: true,
+          className: 'custom-map-tooltip',
+          direction: 'top'
+        }
+      );
 
       marker.on('click', () => {
         onSelectVolunteer(volunteer);
+        map.setView([volunteer.latitude, volunteer.longitude], Math.max(map.getZoom(), 10), { animate: true });
       });
 
-      marker.addTo(map);
-      markers.push(marker);
+      markers.addLayer(marker);
     });
 
-    if (selectedVolunteer && selectedVolunteer.latitude && selectedVolunteer.longitude) {
-      map.setView([selectedVolunteer.latitude, selectedVolunteer.longitude], 13);
-    }
-
     return () => {
-      markers.forEach(m => m.remove());
+      if (markersRef.current) {
+        markersRef.current.clearLayers();
+      }
     };
   }, [volunteers, selectedVolunteer, onSelectVolunteer, map]);
 
   return null;
 }
 
+// Style functions based on volunteer count
+const getDefaultStyle = (count: number): L.PathOptions => ({
+  fillColor: getColorByCount(count),
+  fillOpacity: 0.9,
+  color: '#1A252F',
+  weight: 0.5,
+  opacity: 1
+});
+
+const getHoverStyle = (count: number): L.PathOptions => ({
+  fillColor: getColorByCount(count),
+  fillOpacity: 1,
+  color: '#F39C12',
+  weight: 2,
+  opacity: 1
+});
+
 export default function SearchMap({ volunteers, selectedVolunteer, onSelectVolunteer }: SearchMapProps) {
-  const geoJsonRef = useRef<L.GeoJSON | null>(null);
-  const selectedMunicipalityRef = useRef<string | null>(null);
-  const [geoJsonData, setGeoJsonData] = useState<any>(null);
+  const [geoJsonData, setGeoJsonData] = useState<GeoJSONData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
+  const geoJsonRef = useRef<L.GeoJSON | null>(null);
 
   // Load GeoJSON data
   useEffect(() => {
@@ -184,17 +194,27 @@ export default function SearchMap({ volunteers, selectedVolunteer, onSelectVolun
       try {
         setIsLoading(true);
         const response = await fetch('/data/sweden-municipalities.geojson');
+        
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
+        
         const data = await response.json();
+        
+        if (!data.features || data.features.length === 0) {
+          throw new Error('Invalid GeoJSON: no features found');
+        }
+        
         setGeoJsonData(data);
+        setError(null);
       } catch (err) {
         console.error('Failed to load GeoJSON:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load map data');
       } finally {
         setIsLoading(false);
       }
     };
+    
     loadGeoJsonData();
   }, []);
 
@@ -204,47 +224,21 @@ export default function SearchMap({ volunteers, selectedVolunteer, onSelectVolun
     const municipalityName = props.kom_namn || props.name || 'Okänd';
     const volunteerCount = getVolunteerCountByMunicipality(volunteers, municipalityName);
     
-    // Store data in layer
     (layer as any)._volunteerCount = volunteerCount;
-    (layer as any)._municipalityName = municipalityName;
 
-    // Set initial style
     if (layer instanceof L.Path) {
       layer.setStyle(getDefaultStyle(volunteerCount));
     }
 
-    // Hover events
     layer.on('mouseover', (e: any) => {
-      if (selectedMunicipalityRef.current !== municipalityName) {
-        e.target.setStyle(getHoverStyle(volunteerCount));
-      }
+      e.target.setStyle(getHoverStyle(volunteerCount));
       e.target.bringToFront();
     });
 
     layer.on('mouseout', (e: any) => {
-      if (selectedMunicipalityRef.current !== municipalityName) {
-        e.target.setStyle(getDefaultStyle(volunteerCount));
-      }
+      e.target.setStyle(getDefaultStyle(volunteerCount));
     });
 
-    // Click event
-    layer.on('click', (e: any) => {
-      // Reset previous selection
-      if (geoJsonRef.current) {
-        geoJsonRef.current.eachLayer((l: any) => {
-          if (l instanceof L.Path) {
-            const count = (l as any)._volunteerCount || 0;
-            l.setStyle(getDefaultStyle(count));
-          }
-        });
-      }
-
-      // Set new selection
-      selectedMunicipalityRef.current = municipalityName;
-      e.target.setStyle(selectedStyle);
-    });
-
-    // Tooltip
     layer.bindTooltip(
       `<div class="font-semibold">${municipalityName}</div>
        <div class="text-xs text-gray-600">${volunteerCount} volontärer</div>`,
@@ -258,7 +252,7 @@ export default function SearchMap({ volunteers, selectedVolunteer, onSelectVolun
 
   if (isLoading) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-[#F8F9FA]" style={{ minHeight: '400px' }}>
+      <div className="w-full h-full flex items-center justify-center bg-[#F8F9FA]">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-[#003D5C] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
           <p className="text-[#003D5C] font-medium">Laddar karta...</p>
@@ -267,16 +261,19 @@ export default function SearchMap({ volunteers, selectedVolunteer, onSelectVolun
     );
   }
 
-  if (!geoJsonData) {
+  if (error || !geoJsonData) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-[#F8F9FA]" style={{ minHeight: '400px' }}>
-        <p className="text-red-600">Kunde inte ladda kartan</p>
+      <div className="w-full h-full flex items-center justify-center bg-[#F8F9FA]">
+        <div className="text-center p-8">
+          <p className="text-red-600 font-medium mb-2">Kunde inte ladda kartan</p>
+          <p className="text-gray-500 text-sm">{error || 'Okänt fel'}</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="relative w-full h-full" style={{ minHeight: '400px' }}>
+    <div className="relative w-full h-full bg-[#F8F9FA]">
       <MapContainer
         center={[62.5, 16.0]}
         zoom={5}
@@ -284,6 +281,7 @@ export default function SearchMap({ volunteers, selectedVolunteer, onSelectVolun
         maxZoom={10}
         className="w-full h-full"
         zoomControl={false}
+        ref={mapRef}
         style={{ background: '#F8F9FA', height: '100%', width: '100%' }}
       >
         <GeoJSON
@@ -291,12 +289,12 @@ export default function SearchMap({ volunteers, selectedVolunteer, onSelectVolun
           onEachFeature={onEachMunicipality}
           ref={geoJsonRef}
         />
-        <MapControls />
         <VolunteerMarkers 
-          volunteers={volunteers} 
-          selectedVolunteer={selectedVolunteer} 
+          volunteers={volunteers}
+          selectedVolunteer={selectedVolunteer}
           onSelectVolunteer={onSelectVolunteer}
         />
+        <MapControls />
       </MapContainer>
 
       {/* Legend */}

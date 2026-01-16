@@ -19,18 +19,58 @@
   display: none !important;
 }
 
-/* Custom tooltip */
+/* Custom tooltip - no animations */
 .custom-map-tooltip {
   background: white !important;
-  border: 2px solid #003D5C !important;
+  border: 2px solid transparent !important;
   border-radius: 8px !important;
   padding: 8px 12px !important;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.15) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
   font-family: 'Inter', sans-serif !important;
+  animation: none !important;
+  transition: none !important;
 }
 
 .custom-map-tooltip::before {
-  border-top-color: #003D5C !important;
+  border-top-color: white !important;
+}
+
+/* Disable all tooltip animations */
+.leaflet-tooltip {
+  animation: none !important;
+  transition: none !important;
+}
+
+.leaflet-tooltip-top,
+.leaflet-tooltip-bottom,
+.leaflet-tooltip-left,
+.leaflet-tooltip-right {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Disable all map transitions and animations */
+.leaflet-zoom-animated {
+  transition: none !important;
+}
+
+.leaflet-zoom-anim .leaflet-zoom-animated {
+  transition: none !important;
+}
+
+/* Disable all hover and interactive transitions */
+* {
+  transition-property: none !important;
+  animation-duration: 0s !important;
+}
+
+/* Remove black outline from interactive map elements */
+.leaflet-interactive {
+  outline: none !important;
+}
+
+.leaflet-interactive:focus {
+  outline: none !important;
 }
 
 /* Custom scrollbar */

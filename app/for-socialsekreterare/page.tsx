@@ -7,12 +7,13 @@ export default function ForSocialsekreterarePage() {
   return (
     <div className="min-h-screen bg-[#F8F9FA]">
       {/* Header */}
-      <header className="bg-[#003D5C] text-white py-4 px-6 flex justify-between items-center sticky top-0 z-50">
-        <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition">
-          <div className="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center">
-            <Users size={20} className="text-white" />
+      <header className="bg-[#003D5C] text-white py-3 px-4 md:py-4 md:px-6 flex justify-between items-center sticky top-0 z-50">
+        <Link href="/" className="flex items-center gap-2 md:gap-3 hover:opacity-90 transition">
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-white/10 flex items-center justify-center">
+            <Users size={18} className="text-white md:hidden" />
+            <Users size={20} className="text-white hidden md:block" />
           </div>
-          <span className="font-bold text-lg">Kontaktperson Platform</span>
+          <span className="font-bold text-base md:text-lg">Kontaktperson Platform</span>
         </Link>
         
         <nav className="hidden md:flex gap-6 text-sm font-medium text-white/90">
@@ -21,10 +22,10 @@ export default function ForSocialsekreterarePage() {
           <Link href="/for-socialsekreterare" className="text-white border-b-2 border-[#F39C12]">För Socialsekreterare</Link>
         </nav>
 
-        <div className="flex gap-3">
+        <div className="flex gap-2 md:gap-3">
           <Link 
             href="/login"
-            className="bg-white text-[#003D5C] px-4 py-2 rounded-lg text-sm font-semibold hover:shadow-lg transition"
+            className="bg-white text-[#003D5C] px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm font-semibold hover:shadow-lg transition"
           >
             Logga in
           </Link>
@@ -32,31 +33,34 @@ export default function ForSocialsekreterarePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-[#003D5C] to-[#006B7D] text-white py-20 px-6">
+      <section className="bg-gradient-to-br from-[#003D5C] to-[#006B7D] text-white py-12 md:py-24 px-4 md:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="w-20 h-20 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Shield size={40} className="text-white" />
+          <div className="inline-flex items-center justify-center w-14 h-14 md:w-16 md:h-16 bg-white/10 backdrop-blur-sm rounded-2xl mb-4 md:mb-6">
+            <Shield size={20} className="text-white md:hidden" strokeWidth={1.5} />
+            <Shield size={24} className="text-white hidden md:block" strokeWidth={1.5} />
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">För Socialsekreterare</h1>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 tracking-tight px-2">För Socialsekreterare</h1>
+          <p className="text-base md:text-lg text-white/80 mb-6 md:mb-10 max-w-2xl mx-auto leading-relaxed px-2">
             Hitta rätt kontaktperson för dina klienter. Vår plattform ger dig tillgång till 
             granskade volontärer i hela Sverige med kraftfulla sök- och filtreringsverktyg.
           </p>
           <Link 
             href="/login"
-            className="inline-flex items-center gap-2 bg-[#F39C12] hover:bg-[#E67E22] text-white px-8 py-4 rounded-xl text-lg font-bold transition transform hover:scale-105 shadow-lg"
+            className="inline-flex items-center gap-2 bg-white text-[#003D5C] px-6 py-3 md:px-8 md:py-3.5 rounded-xl text-sm md:text-base font-semibold transition hover:shadow-xl"
           >
-            <Search size={24} />
+            <Search size={16} strokeWidth={2} className="md:hidden" />
+            <Search size={18} strokeWidth={2} className="hidden md:block" />
             Sök volontärer
-            <ArrowRight size={20} />
+            <ArrowRight size={14} strokeWidth={2} className="md:hidden" />
+            <ArrowRight size={16} strokeWidth={2} className="hidden md:block" />
           </Link>
         </div>
       </section>
 
       {/* What We Offer */}
-      <section className="py-16 px-6 bg-white">
+      <section className="py-12 md:py-16 px-4 md:px-6 bg-white">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-3xl font-bold text-[#003D5C] mb-8 text-center">Vad erbjuder plattformen?</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#003D5C] mb-6 md:mb-8 text-center">Vad erbjuder plattformen?</h2>
           
           <div className="prose prose-lg max-w-none text-gray-700">
             <p className="text-lg leading-relaxed mb-6">
@@ -76,27 +80,27 @@ export default function ForSocialsekreterarePage() {
       </section>
 
       {/* Features Grid */}
-      <section className="py-16 px-6 bg-[#F8F9FA]">
+      <section className="py-12 md:py-16 px-4 md:px-6 bg-[#F8F9FA]">
         <div className="max-w-5xl mx-auto">
-          <h2 className="text-3xl font-bold text-[#003D5C] mb-12 text-center">Funktioner i dashboarden</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-[#003D5C] mb-8 md:mb-12 text-center">Funktioner i dashboarden</h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Feature 1 */}
-            <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition">
-              <div className="w-14 h-14 bg-[#006B7D]/10 rounded-full flex items-center justify-center mb-4">
-                <MapPin size={28} className="text-[#006B7D]" />
+            <div className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-gray-200 transition">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#006B7D]/5 rounded-xl mb-5">
+                <MapPin size={20} className="text-[#006B7D]" strokeWidth={1.5} />
               </div>
-              <h3 className="text-xl font-bold text-[#003D5C] mb-3">Interaktiv Sverigekarta</h3>
-              <p className="text-gray-600">
+              <h3 className="text-lg font-semibold text-[#003D5C] mb-3">Interaktiv Sverigekarta</h3>
+              <p className="text-gray-600 text-sm leading-relaxed">
                 Sök volontärer direkt på kartan. Klicka på en kommun för att se tillgängliga 
                 kontaktpersoner i området. Visualisera täckning och hitta volontärer nära dina klienter.
               </p>
             </div>
 
             {/* Feature 2 */}
-            <div className="bg-white rounded-xl p-6 shadow-md hover:shadow-lg transition">
-              <div className="w-14 h-14 bg-[#F39C12]/10 rounded-full flex items-center justify-center mb-4">
-                <Filter size={28} className="text-[#F39C12]" />
+            <div className="bg-white rounded-2xl p-8 border border-gray-100 hover:border-gray-200 transition">
+              <div className="inline-flex items-center justify-center w-12 h-12 bg-[#F39C12]/5 rounded-xl mb-5">
+                <Filter size={20} className="text-[#F39C12]" strokeWidth={1.5} />
               </div>
               <h3 className="text-xl font-bold text-[#003D5C] mb-3">Avancerad filtrering</h3>
               <p className="text-gray-600">

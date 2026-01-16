@@ -4,15 +4,15 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { Users, Search, UserPlus, ArrowRight } from 'lucide-react';
 
-const CleanSwedenMap = dynamic(
-  () => import('./components/CleanSwedenMap'),
+const ProvinceMap = dynamic(
+  () => import('./components/ProvinceMap'),
   { 
     ssr: false,
     loading: () => (
       <div className="w-full h-full flex items-center justify-center bg-[#F8F9FA]">
         <div className="text-center">
-          <div className="w-12 h-12 border-4 border-[#003D5C] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-[#003D5C] font-medium">Laddar karta...</p>
+          <div className="w-12 h-12 border-4 border-gray-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-700 font-medium">Laddar karta...</p>
         </div>
       </div>
     )
@@ -22,7 +22,6 @@ const CleanSwedenMap = dynamic(
 export default function HomePage() {
   return (
     <div className="h-screen w-screen overflow-hidden bg-[#F8F9FA] flex flex-col">
-      {/* Header */}
       <header className="bg-[#003D5C] text-white py-3 px-4 md:px-6 z-[1001] flex justify-between items-center">
         <Link 
           href="/"
@@ -56,38 +55,64 @@ export default function HomePage() {
         </div>
       </header>
       
-      {/* Main Map - Full Screen */}
-      <div className="flex-1 relative">
-        <CleanSwedenMap />
-        
-        {/* Centered Action Buttons - Responsive */}
-        <div className="absolute bottom-4 md:bottom-8 left-1/2 transform -translate-x-1/2 z-[1001] flex flex-col sm:flex-row gap-3 md:gap-4 w-[90%] sm:w-auto max-w-lg">
-          {/* Volunteer Button - Links to registration form */}
-          <Link
-            href="/registrera"
-            className="flex-1 sm:flex-none bg-[#F39C12] hover:bg-[#E67E22] text-white px-4 md:px-6 py-3 md:py-4 rounded-xl shadow-lg transition transform hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2 md:gap-3"
-          >
-            <UserPlus size={20} className="md:w-6 md:h-6" />
-            <div className="text-left">
-              <span className="block text-sm md:text-base font-bold">Bli kontaktperson</span>
-              <span className="block text-xs opacity-90 hidden sm:block">Registrera dig som volontär</span>
-            </div>
-            <ArrowRight size={16} className="ml-1 hidden sm:block" />
-          </Link>
-          
-          {/* Social Worker Login Button - Links to login */}
-          <Link
-            href="/login"
-            className="flex-1 sm:flex-none bg-[#003D5C] hover:bg-[#004e75] text-white px-4 md:px-6 py-3 md:py-4 rounded-xl shadow-lg transition transform hover:scale-105 hover:shadow-xl flex items-center justify-center gap-2 md:gap-3"
-          >
-            <Search size={20} className="md:w-6 md:h-6" />
-            <div className="text-left">
-              <span className="block text-sm md:text-base font-bold">Sök volontärer</span>
-              <span className="block text-xs opacity-80 hidden sm:block">Logga in som socialsekreterare</span>
-            </div>
-            <ArrowRight size={16} className="ml-1 hidden sm:block" />
-          </Link>
+      {/* Desktop: Sidebar + Map Layout | Mobile: Stacked Layout */}
+      <div className="flex-1 flex flex-col md:flex-row">
+        {/* Left Sidebar - Desktop Only */}
+        <aside className="hidden md:flex md:flex-col md:w-80 lg:w-96 bg-white border-r border-gray-200 p-6 gap-4">
+          <div className="flex flex-col gap-4">
+            <Link
+              href="/registrera"
+              className="bg-[#F39C12] hover:bg-[#E67E22] text-white px-6 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-3 group"
+            >
+              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-all">
+                <UserPlus size={24} />
+              </div>
+              <div className="flex-1 text-left">
+                <span className="block text-base font-bold">Bli kontaktperson</span>
+                <span className="block text-sm opacity-90">Registrera dig som volontär</span>
+              </div>
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+            
+            <Link
+              href="/login"
+              className="bg-[#003D5C] hover:bg-[#004e75] text-white px-6 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center gap-3 group"
+            >
+              <div className="w-12 h-12 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-all">
+                <Search size={24} />
+              </div>
+              <div className="flex-1 text-left">
+                <span className="block text-base font-bold">Sök volontärer</span>
+                <span className="block text-sm opacity-80">Logga in som socialsekreterare</span>
+              </div>
+              <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+        </aside>
+
+        {/* Map Container */}
+        <div className="flex-1 relative h-[calc(100vh-140px)] md:h-auto">
+          <ProvinceMap />
         </div>
+      </div>
+      
+      {/* Mobile Buttons - Bottom Fixed */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-[1001] flex flex-col gap-2 w-full p-3 bg-gradient-to-t from-[#F8F9FA] via-[#F8F9FA]/80 to-transparent pt-4">
+        <Link
+          href="/registrera"
+          className="bg-[#F39C12] hover:bg-[#E67E22] text-white px-2 py-2 rounded-lg shadow-lg flex items-center justify-center gap-1"
+        >
+          <UserPlus size={14} />
+          <span className="text-xs font-bold">Bli kontaktperson</span>
+        </Link>
+        
+        <Link
+          href="/login"
+          className="bg-[#003D5C] hover:bg-[#004e75] text-white px-2 py-2 rounded-lg shadow-lg flex items-center justify-center gap-1"
+        >
+          <Search size={14} />
+          <span className="text-xs font-bold">Sök volontärer</span>
+        </Link>
       </div>
     </div>
   );
