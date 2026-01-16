@@ -26,12 +26,28 @@ interface NavItem {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [pendingCount, setPendingCount] = useState(3); // Mock pending count
+  const [socialWorkersCount, setSocialWorkersCount] = useState(0);
   const [adminUser, setAdminUser] = useState({ name: 'Admin', email: 'admin@kontaktperson.se' });
+
+  // Fetch social workers count
+  useEffect(() => {
+    async function fetchSocialWorkersCount() {
+      try {
+        const response = await fetch('/api/admin/get-social-workers');
+        const result = await response.json();
+        if (response.ok && result.socialWorkers) {
+          setSocialWorkersCount(result.socialWorkers.length);
+        }
+      } catch (error) {
+        console.error('Error fetching social workers count:', error);
+      }
+    }
+    fetchSocialWorkersCount();
+  }, []);
 
   const navItems: NavItem[] = [
     { label: 'Dashboard', href: '/admin', icon: <LayoutDashboard size={20} /> },
-    { label: 'Socialsekreterare', href: '/admin/social-workers', icon: <Users size={20} />, badge: pendingCount },
+    { label: 'Socialsekreterare', href: '/admin/social-workers', icon: <Users size={20} />, badge: socialWorkersCount },
     { label: 'Volontärer', href: '/admin/volunteers', icon: <UserCheck size={20} /> },
     { label: 'Behörigheter', href: '/admin/permissions', icon: <Shield size={20} /> },
     { label: 'Granskningsloggar', href: '/admin/audit-logs', icon: <FileText size={20} /> },

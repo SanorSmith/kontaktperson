@@ -166,19 +166,90 @@ function SocialWorkersContent() {
     }
   };
 
-  const handleResendInvitation = (id: string) => {
-    console.log('Resend invitation to:', id);
+  const handleResendInvitation = async (id: string) => {
+    try {
+      const response = await fetch('/api/admin/resend-invitation', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: id })
+      });
+      
+      if (response.ok) {
+        alert('Inbjudan skickad!');
+      } else {
+        alert('Kunde inte skicka inbjudan. Försök igen.');
+      }
+    } catch (error) {
+      console.error('Error resending invitation:', error);
+      alert('Ett fel uppstod. Försök igen.');
+    }
     setActiveDropdown(null);
   };
 
-  const handleDeactivate = (id: string) => {
-    console.log('Deactivate:', id);
+  const handleDeactivate = async (id: string) => {
+    const worker = socialWorkers.find(w => w.id === id);
+    if (!worker) return;
+    
+    const newStatus = worker.status === 'inactive' ? 'verified' : 'inactive';
+    const confirmMsg = worker.status === 'inactive' 
+      ? 'Vill du aktivera denna socialsekreterare?'
+      : 'Vill du inaktivera denna socialsekreterare?';
+    
+    if (!confirm(confirmMsg)) {
+      setActiveDropdown(null);
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/admin/update-user', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          userId: id,
+          status: newStatus === 'verified' ? 'active' : 'inactive'
+        })
+      });
+      
+      if (response.ok) {
+        // Update local state
+        setSocialWorkers(prev => prev.map(w => 
+          w.id === id ? { ...w, status: newStatus } : w
+        ));
+        alert(newStatus === 'verified' ? 'Socialsekreterare aktiverad!' : 'Socialsekreterare inaktiverad!');
+      } else {
+        alert('Kunde inte uppdatera status. Försök igen.');
+      }
+    } catch (error) {
+      console.error('Error updating status:', error);
+      alert('Ett fel uppstod. Försök igen.');
+    }
     setActiveDropdown(null);
   };
 
-  const handleDelete = (id: string) => {
-    if (confirm('Är du säker? Detta kan inte ångras.')) {
-      setSocialWorkers(prev => prev.filter(w => w.id !== id));
+  const handleDelete = async (id: string) => {
+    if (!confirm('Är du säker på att du vill ta bort denna socialsekreterare? Detta kan inte ångras.')) {
+      setActiveDropdown(null);
+      return;
+    }
+    
+    try {
+      const response = await fetch('/api/admin/delete-user', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId: id })
+      });
+      
+      if (response.ok) {
+        // Remove from local state
+        setSocialWorkers(prev => prev.filter(w => w.id !== id));
+        alert('Socialsekreterare borttagen!');
+      } else {
+        const result = await response.json();
+        alert(`Kunde inte ta bort socialsekreterare: ${result.error || 'Okänt fel'}`);
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+      alert('Ett fel uppstod. Försök igen.');
     }
     setActiveDropdown(null);
   };

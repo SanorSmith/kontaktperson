@@ -7,7 +7,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
-export async function POST(request: NextRequest) {
+async function deleteUserHandler(request: NextRequest) {
   try {
     const body = await request.json();
     const { userId } = body;
@@ -96,4 +96,13 @@ export async function POST(request: NextRequest) {
     console.error('Delete user error:', error);
     return NextResponse.json({ error: error.message || 'Internal server error' }, { status: 500 });
   }
+}
+
+// Export both DELETE and POST methods for compatibility
+export async function DELETE(request: NextRequest) {
+  return deleteUserHandler(request);
+}
+
+export async function POST(request: NextRequest) {
+  return deleteUserHandler(request);
 }

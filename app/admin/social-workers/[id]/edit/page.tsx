@@ -88,10 +88,10 @@ export default function EditSocialWorkerPage() {
           phone: swData?.phone_work || '',
           municipalityId: municipalityMatch?.id || '',
           department: swData?.department || '',
-          position: 'Socialsekreterare',
+          position: swData?.position || 'Socialsekreterare',
           employeeNumber: swData?.employee_id || '',
           accessLevel: swData?.access_level || 'viewer',
-          internalNotes: ''
+          internalNotes: swData?.internal_notes || ''
         });
       } catch (err) {
         console.error('Error:', err);
@@ -156,14 +156,16 @@ export default function EditSocialWorkerPage() {
           userId: params.id,
           profileData: {
             full_name: formData.fullName,
-            email: formData.workEmail, // Use workEmail as the primary email
+            email: formData.email, // Use the editable email field
             municipality: municipalities.find(m => m.id === formData.municipalityId)?.name || ''
           },
           socialWorkerData: {
             department: formData.department,
             phone_work: formData.phone,
             employee_id: formData.employeeNumber || null,
-            access_level: formData.accessLevel
+            access_level: formData.accessLevel,
+            position: formData.position,
+            internal_notes: formData.internalNotes || null
           }
         })
       });
@@ -184,7 +186,14 @@ export default function EditSocialWorkerPage() {
   };
 
   const handleChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      // Keep workEmail in sync with email field
+      if (field === 'email') {
+        updated.workEmail = value;
+      }
+      return updated;
+    });
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }

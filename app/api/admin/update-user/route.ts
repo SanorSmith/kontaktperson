@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (socialWorkerData) {
-      const validColumns = ['department', 'phone_work', 'employee_id', 'access_level', 'status'];
+      const validColumns = ['department', 'phone_work', 'employee_id', 'access_level', 'status', 'position', 'internal_notes'];
       const validSwData: Record<string, any> = {};
       for (const key of validColumns) {
         if (socialWorkerData[key] !== undefined) {

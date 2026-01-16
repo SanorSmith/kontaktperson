@@ -39,19 +39,24 @@ export async function GET(request: NextRequest) {
       .single();
 
     return NextResponse.json({
-      user: {
+      profile: {
         id: profile.id,
-        name: profile.full_name,
+        full_name: profile.full_name,
         email: profile.email,
         municipality: profile.municipality,
         role: profile.role,
-        department: socialWorker?.department,
-        phone: socialWorker?.phone_work,
-        employeeId: socialWorker?.employee_id,
-        accessLevel: socialWorker?.access_level,
-        status: socialWorker?.status,
-        createdAt: profile.created_at
-      }
+        created_at: profile.created_at
+      },
+      socialWorker: socialWorker ? {
+        id: socialWorker.id,
+        department: socialWorker.department,
+        phone_work: socialWorker.phone_work,
+        employee_id: socialWorker.employee_id,
+        access_level: socialWorker.access_level,
+        status: socialWorker.status,
+        position: socialWorker.position,
+        internal_notes: socialWorker.internal_notes
+      } : null
     });
 
   } catch (error: any) {
