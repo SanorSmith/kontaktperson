@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MapContainer, GeoJSON, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, GeoJSON, useMap, useMapEvents, ScaleControl } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { ZoomIn, ZoomOut, RotateCcw, X, User, MapPin, LogIn } from 'lucide-react';
@@ -121,6 +121,83 @@ function ProvinceModal({ province, onClose, onLogin }: ProvinceModalProps) {
   );
 }
 
+// Custom scale bar component with 50km increments
+function CustomScaleBar() {
+  const map = useMap();
+  const [scale, setScale] = useState({ distance: 100, width: 100 });
+
+  useEffect(() => {
+    const updateScale = () => {
+      const zoom = map.getZoom();
+      const center = map.getCenter();
+      
+      // Calculate meters per pixel at current zoom and latitude
+      const metersPerPixel = 40075016.686 * Math.abs(Math.cos(center.lat * Math.PI / 180)) / Math.pow(2, zoom + 8);
+      
+      // Target distances in km - increments of 50
+      const distances = [10, 20, 50, 100, 150, 200, 250, 300, 400, 500];
+      
+      // Find best distance that fits well on screen (between 60-180 pixels)
+      let bestDistance = 100;
+      let bestWidth = 100;
+      
+      for (const dist of distances) {
+        const widthInPixels = (dist * 1000) / metersPerPixel;
+        if (widthInPixels >= 60 && widthInPixels <= 180) {
+          bestDistance = dist;
+          bestWidth = widthInPixels;
+          break;
+        }
+      }
+      
+      // If no good fit found, use the closest one
+      if (bestWidth === 100 && bestDistance === 100) {
+        // Find the distance that gives closest to 120 pixels
+        let closestDist = distances[0];
+        let closestDiff = Math.abs((distances[0] * 1000) / metersPerPixel - 120);
+        
+        for (const dist of distances) {
+          const widthInPixels = (dist * 1000) / metersPerPixel;
+          const diff = Math.abs(widthInPixels - 120);
+          if (diff < closestDiff) {
+            closestDiff = diff;
+            closestDist = dist;
+            bestWidth = widthInPixels;
+          }
+        }
+        bestDistance = closestDist;
+      }
+      
+      setScale({ distance: bestDistance, width: Math.round(bestWidth) });
+    };
+
+    updateScale();
+    map.on('zoomend', updateScale);
+    map.on('moveend', updateScale);
+
+    return () => {
+      map.off('zoomend', updateScale);
+      map.off('moveend', updateScale);
+    };
+  }, [map]);
+
+  return (
+    <div className="absolute bottom-4 left-4 z-[1000] bg-white/95 rounded-lg shadow-md px-3 py-2 border border-gray-300">
+      <div className="flex flex-col gap-1">
+        <div 
+          className="border-b-2 border-l-2 border-r-2 border-gray-700 h-2"
+          style={{ width: `${scale.width}px` }}
+        >
+          <div className="flex justify-between text-[10px] font-semibold text-gray-700 mt-1">
+            <span>0</span>
+            <span>{scale.distance} km</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // Map controls component
 function MapControls() {
   const map = useMap();
@@ -136,7 +213,7 @@ function MapControls() {
   const handleZoomIn = () => map.zoomIn();
   const handleZoomOut = () => map.zoomOut();
   const handleReset = () => {
-    map.setView(isMobile ? [62.0, 15.5] : [62.5, 16.0], isMobile ? 4.0 : 4.25);
+    map.setView(isMobile ? [62.0, 15.5] : [62.5, 16.0], isMobile ? 4.5 : 4.75);
   };
 
   return (
@@ -584,9 +661,9 @@ export default function ProvinceMap({ isLoggedIn = false, onMunicipalityClick }:
       <MapContainer
         key={mapKey}
         center={isMobile ? [62.0, 15.5] : [62.5, 16.0]}
-        zoom={isMobile ? 4.0 : 4.25}
-        minZoom={isMobile ? 4.0 : 4.25}
-        maxZoom={8}
+        zoom={isMobile ? 4.5 : 4.75}
+        minZoom={isMobile ? 4.0 : 4.5}
+        maxZoom={9}
         maxBounds={[[55, 10], [70, 25]]}
         maxBoundsViscosity={1.0}
         className="w-full h-full"
@@ -624,6 +701,9 @@ export default function ProvinceMap({ isLoggedIn = false, onMunicipalityClick }:
         )}
         
         <MapControls />
+        
+        {/* Custom scale bar with 50km increments */}
+        <CustomScaleBar />
       </MapContainer>
 
       {/* Legend/Keys - Bottom right on desktop, top right on mobile */}

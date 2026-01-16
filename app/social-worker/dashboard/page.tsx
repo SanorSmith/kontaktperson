@@ -166,7 +166,7 @@ export default function SocialWorkerDashboard() {
           <h2 className="text-lg font-semibold text-gray-900">Volontärer i Sverige</h2>
           <p className="text-sm text-gray-500">Klicka på ett län för att se kommuner och volontärer</p>
         </div>
-        <div className="relative w-full h-[500px]">
+        <div className="relative w-full h-[calc(100vh-24rem)] min-h-[400px]">
           <ProvinceMap 
             isLoggedIn={true}
             onMunicipalityClick={handleMunicipalityClick}
