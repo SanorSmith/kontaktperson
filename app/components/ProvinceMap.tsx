@@ -166,7 +166,12 @@ function MapControls() {
   );
 }
 
-export default function ProvinceMap() {
+interface ProvinceMapProps {
+  isLoggedIn?: boolean;
+  onMunicipalityClick?: (municipalityName: string) => void;
+}
+
+export default function ProvinceMap({ isLoggedIn = false, onMunicipalityClick }: ProvinceMapProps = {}) {
   const [selectedProvince, setSelectedProvince] = useState<Province | null>(null);
   const [geoJsonData, setGeoJsonData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -488,6 +493,12 @@ export default function ProvinceMap() {
 
     // Click event - mobile-friendly tap interaction for municipalities
     layer.on('click', (e: any) => {
+      // If logged in and callback provided, filter volunteers by kommun
+      if (isLoggedIn && onMunicipalityClick) {
+        onMunicipalityClick(municipalityName);
+        return;
+      }
+      
       // On mobile: first tap shows info, second tap confirms and shows modal
       if (window.innerWidth < 768) {
         if (tappedMunicipalityRef.current === municipalityName) {

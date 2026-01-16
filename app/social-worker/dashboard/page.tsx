@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import {
   Users,
@@ -15,6 +16,21 @@ import {
   FileText,
   Search
 } from 'lucide-react';
+
+const ProvinceMap = dynamic(
+  () => import('../../components/ProvinceMap'),
+  { 
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center bg-[#F8F9FA]">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-gray-400 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-700 font-medium">Laddar karta...</p>
+        </div>
+      </div>
+    )
+  }
+);
 
 // Mock data for pending applications
 const mockPendingApplications = [
@@ -72,6 +88,13 @@ export default function SocialWorkerDashboard() {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+
+  const handleMunicipalityClick = (municipalityName: string) => {
+    // For now, just log the municipality name
+    // In the future, this could navigate to search page with filter
+    console.log('Municipality clicked:', municipalityName);
+    window.location.href = `/social-worker/search?municipality=${encodeURIComponent(municipalityName)}`;
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -134,6 +157,20 @@ export default function SocialWorkerDashboard() {
           </div>
           <p className="text-3xl font-bold text-gray-900">{stats.activeMatches}</p>
           <p className="text-sm text-gray-500">Aktiva matchningar</p>
+        </div>
+      </div>
+
+      {/* Map Section */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div className="p-4 border-b border-gray-100">
+          <h2 className="text-lg font-semibold text-gray-900">Volontärer i Sverige</h2>
+          <p className="text-sm text-gray-500">Klicka på ett län för att se kommuner och volontärer</p>
+        </div>
+        <div className="relative w-full h-[500px]">
+          <ProvinceMap 
+            isLoggedIn={true}
+            onMunicipalityClick={handleMunicipalityClick}
+          />
         </div>
       </div>
 

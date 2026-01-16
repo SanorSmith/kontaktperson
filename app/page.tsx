@@ -56,9 +56,9 @@ export default function HomePage() {
       </header>
       
       {/* Desktop: Sidebar + Map Layout | Mobile: Stacked Layout */}
-      <div className="flex-1 flex flex-col md:flex-row">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Left Sidebar - Desktop Only */}
-        <aside className="hidden md:flex md:flex-col md:w-80 lg:w-96 bg-white border-r border-gray-200 p-6 gap-4">
+        <aside className="hidden md:flex md:flex-col md:w-80 lg:w-96 bg-white border-r border-gray-200 p-6 gap-4 overflow-y-auto">
           <div className="flex flex-col gap-4">
             <Link
               href="/registrera"
@@ -90,8 +90,8 @@ export default function HomePage() {
           </div>
         </aside>
 
-        {/* Map Container */}
-        <div className="flex-1 relative h-[calc(100vh-140px)] md:h-auto">
+        {/* Map Container - Full screen responsive */}
+        <div className="flex-1 relative w-full h-full">
           <ProvinceMap />
         </div>
       </div>

@@ -24,7 +24,7 @@ import {
 } from 'lucide-react';
 
 // Dynamically import the map component to avoid SSR issues
-const SearchMap = dynamic(() => import('./SearchMap'), {
+const ProvinceMap = dynamic(() => import('../../components/ProvinceMap'), {
   ssr: false,
   loading: () => (
     <div className="w-full h-full bg-gray-100 flex items-center justify-center">
@@ -160,6 +160,19 @@ export default function SearchPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedVolunteer, setSelectedVolunteer] = useState<any>(null);
   
+  // Check URL for municipality parameter
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const municipality = params.get('municipality');
+    if (municipality) {
+      setFilters(prev => ({
+        ...prev,
+        municipality: municipality
+      }));
+      setViewMode('list');
+    }
+  }, []);
+  
   // Filter states
   const [filters, setFilters] = useState({
     municipality: '',
@@ -265,6 +278,14 @@ export default function SearchPage() {
       hasCar: false
     });
     setSearchQuery('');
+  };
+
+  const handleMunicipalityClick = (municipalityName: string) => {
+    setFilters(prev => ({
+      ...prev,
+      municipality: municipalityName
+    }));
+    setViewMode('list');
   };
 
   const getStatusBadge = (status: string) => {
@@ -538,10 +559,9 @@ export default function SearchPage() {
         <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           {viewMode === 'map' ? (
             <div className="h-full relative">
-              <SearchMap
-                volunteers={filteredVolunteers}
-                selectedVolunteer={selectedVolunteer}
-                onSelectVolunteer={setSelectedVolunteer}
+              <ProvinceMap 
+                isLoggedIn={true}
+                onMunicipalityClick={handleMunicipalityClick}
               />
               
               {/* Selected volunteer card */}
