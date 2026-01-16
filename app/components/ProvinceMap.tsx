@@ -262,6 +262,35 @@ export default function ProvinceMap({ isLoggedIn = false, onMunicipalityClick }:
   const [isMobile, setIsMobile] = useState(false);
   const [tappedProvinceId, setTappedProvinceId] = useState<string | null>(null);
   const [tappedMunicipalityName, setTappedMunicipalityName] = useState<string | null>(null);
+  const [volunteerCounts, setVolunteerCounts] = useState<Record<string, number>>({});
+  const [provincesWithCounts, setProvincesWithCounts] = useState(provinces);
+
+  // Fetch real volunteer counts from database
+  useEffect(() => {
+    async function fetchVolunteerCounts() {
+      try {
+        const response = await fetch('/api/volunteers/counts');
+        const result = await response.json();
+        if (response.ok && result.counts) {
+          setVolunteerCounts(result.counts);
+          
+          // Update provinces with real counts
+          const updatedProvinces = provinces.map(province => {
+            // Sum up volunteers from all municipalities in this province
+            // For now, we'll use the municipality name mapping
+            // You may need to adjust this based on your actual data structure
+            const provinceKey = province.name.toLowerCase().replace(/\s+län/g, '');
+            const count = result.counts[provinceKey] || 0;
+            return { ...province, volunteers: count };
+          });
+          setProvincesWithCounts(updatedProvinces);
+        }
+      } catch (error) {
+        console.error('Error fetching volunteer counts:', error);
+      }
+    }
+    fetchVolunteerCounts();
+  }, []);
 
   // Detect mobile on mount
   useEffect(() => {
@@ -510,10 +539,11 @@ export default function ProvinceMap({ isLoggedIn = false, onMunicipalityClick }:
       }
     });
 
-    // Tooltip for province
+    // Tooltip for province - use real volunteer count
+    const provinceWithCount = provincesWithCounts.find(p => p.id === provinceId) || province;
     layer.bindTooltip(
       `<div class="font-semibold">${province.name}</div>
-       <div class="text-xs text-gray-600">${province.volunteers} volontärer • ${province.municipalities} kommuner</div>`,
+       <div class="text-xs text-gray-600">${provinceWithCount.volunteers} volontärer • ${province.municipalities} kommuner</div>`,
       {
         sticky: true,
         className: 'custom-map-tooltip',
@@ -603,10 +633,18 @@ export default function ProvinceMap({ isLoggedIn = false, onMunicipalityClick }:
       }
     });
 
-    // Tooltip
+    // Tooltip - show volunteer count for this municipality
+    const municipalityKey = municipalityName.toLowerCase();
+    const municipalityVolunteers = volunteerCounts[municipalityKey] || 0;
+    
+    // Debug logging
+    if (municipalityVolunteers > 0) {
+      console.log(`Municipality: ${municipalityName}, Key: ${municipalityKey}, Count: ${municipalityVolunteers}`);
+    }
+    
     layer.bindTooltip(
       `<div class="font-semibold">${municipalityName}</div>
-       <div class="text-xs text-gray-600">Kommun i ${province.name}</div>`,
+       <div class="text-xs text-gray-600">${municipalityVolunteers} volontärer • Kommun i ${province.name}</div>`,
       {
         sticky: true,
         className: 'custom-map-tooltip',

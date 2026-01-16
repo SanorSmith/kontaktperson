@@ -46,6 +46,7 @@ export default function EditSocialWorkerPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isCheckingEmail, setIsCheckingEmail] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formData, setFormData] = useState<FormData>({
     fullName: '',
@@ -103,6 +104,55 @@ export default function EditSocialWorkerPage() {
 
     fetchSocialWorker();
   }, [params.id]);
+
+  // Generate username from full name
+  const generateUsername = (fullName: string): string => {
+    if (!fullName) return '';
+    
+    // Remove special characters and convert to lowercase
+    const cleanName = fullName
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') // Remove diacritics
+      .replace(/[^a-z\s]/g, '') // Remove non-alphabetic characters
+      .trim();
+    
+    const parts = cleanName.split(/\s+/);
+    
+    if (parts.length === 1) {
+      return parts[0];
+    } else if (parts.length >= 2) {
+      // firstname.lastname format
+      return `${parts[0]}.${parts[parts.length - 1]}`;
+    }
+    
+    return cleanName.replace(/\s+/g, '.');
+  };
+
+  // Check if email exists in database
+  const checkEmailExists = async (email: string): Promise<boolean> => {
+    if (!email) return false;
+    
+    try {
+      setIsCheckingEmail(true);
+      const response = await fetch('/api/admin/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email, 
+          excludeUserId: params.id // Exclude current user when editing
+        })
+      });
+      
+      const result = await response.json();
+      return result.exists || false;
+    } catch (error) {
+      console.error('Error checking email:', error);
+      return false;
+    } finally {
+      setIsCheckingEmail(false);
+    }
+  };
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -185,15 +235,66 @@ export default function EditSocialWorkerPage() {
     }
   };
 
-  const handleChange = (field: keyof FormData, value: string) => {
+  const handleChange = async (field: keyof FormData, value: string) => {
     setFormData(prev => {
       const updated = { ...prev, [field]: value };
+      
+      // Auto-generate email when full name changes
+      if (field === 'fullName' && value) {
+        const username = generateUsername(value);
+        const selectedMunicipality = municipalities.find(m => m.id === prev.municipalityId);
+        if (selectedMunicipality && username) {
+          const municipalityDomain = selectedMunicipality.name.toLowerCase();
+          const newEmail = `${username}@${municipalityDomain}.se`;
+          updated.email = newEmail;
+          updated.workEmail = newEmail;
+        }
+      }
+      
       // Keep workEmail in sync with email field
       if (field === 'email') {
         updated.workEmail = value;
       }
+      
+      // Auto-update email when municipality changes
+      if (field === 'municipalityId') {
+        const selectedMunicipality = municipalities.find(m => m.id === value);
+        if (selectedMunicipality) {
+          // Generate username from full name
+          const username = prev.fullName ? generateUsername(prev.fullName) : prev.email.split('@')[0];
+          // Create new email with municipality domain
+          const municipalityDomain = selectedMunicipality.name.toLowerCase();
+          const newEmail = `${username}@${municipalityDomain}.se`;
+          updated.email = newEmail;
+          updated.workEmail = newEmail;
+        }
+      }
+      
       return updated;
     });
+    
+    // Check email uniqueness when email field changes
+    if (field === 'email' || field === 'fullName' || field === 'municipalityId') {
+      // Wait for state to update, then check email
+      setTimeout(async () => {
+        const currentEmail = field === 'email' ? value : formData.email;
+        if (currentEmail && currentEmail.includes('@')) {
+          const exists = await checkEmailExists(currentEmail);
+          if (exists) {
+            setErrors(prev => ({ ...prev, email: 'Denna e-postadress används redan av en annan användare' }));
+          } else {
+            setErrors(prev => {
+              const newErrors = { ...prev };
+              if (newErrors.email === 'Denna e-postadress används redan av en annan användare') {
+                delete newErrors.email;
+              }
+              return newErrors;
+            });
+          }
+        }
+      }, 500);
+    }
+    
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: '' }));
     }
@@ -261,15 +362,26 @@ export default function EditSocialWorkerPage() {
                   type="email"
                   value={formData.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  className={`w-full pl-10 pr-4 py-2.5 border rounded-lg focus:ring-1 focus:ring-[#003D5C] outline-none ${
+                  className={`w-full pl-10 pr-10 py-2.5 border rounded-lg focus:ring-1 focus:ring-[#003D5C] outline-none ${
                     errors.email ? 'border-[#E74C3C]' : 'border-gray-300 focus:border-[#003D5C]'
                   }`}
                 />
+                {isCheckingEmail && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <div className="w-4 h-4 border-2 border-[#003D5C] border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
               </div>
               {errors.email && (
                 <p className="text-sm text-[#E74C3C] mt-1 flex items-center gap-1">
                   <AlertCircle size={14} />
                   {errors.email}
+                </p>
+              )}
+              {!errors.email && formData.email && !isCheckingEmail && (
+                <p className="text-sm text-green-600 mt-1 flex items-center gap-1">
+                  <Check size={14} />
+                  E-postadressen är tillgänglig
                 </p>
               )}
             </div>

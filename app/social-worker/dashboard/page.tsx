@@ -32,61 +32,45 @@ const ProvinceMap = dynamic(
   }
 );
 
-// Mock data for pending applications
-const mockPendingApplications = [
-  {
-    id: '1',
-    full_name: 'Anna Svensson',
-    municipality: 'Stockholm',
-    created_at: '2024-01-10T10:00:00Z',
-    languages: ['Svenska', 'Engelska'],
-    status: 'pending'
-  },
-  {
-    id: '2',
-    full_name: 'Erik Johansson',
-    municipality: 'Stockholm',
-    created_at: '2024-01-09T14:30:00Z',
-    languages: ['Svenska', 'Arabiska'],
-    status: 'pending'
-  },
-  {
-    id: '3',
-    full_name: 'Maria Lindgren',
-    municipality: 'Stockholm',
-    created_at: '2024-01-08T09:15:00Z',
-    languages: ['Svenska', 'Spanska', 'Engelska'],
-    status: 'under_review'
-  },
-];
-
-// Mock statistics
-const mockStats = {
-  pendingApplications: 12,
-  approvedVolunteers: 45,
-  rejectedThisMonth: 3,
-  activeMatches: 28
-};
-
-// Mock recent activity
-const mockRecentActivity = [
-  { id: '1', action: 'Godkände ansökan', volunteer: 'Lisa Andersson', time: '2 timmar sedan' },
-  { id: '2', action: 'Lade till anteckning', volunteer: 'Johan Berg', time: '4 timmar sedan' },
-  { id: '3', action: 'Begärde bakgrundskontroll', volunteer: 'Sara Holm', time: 'Igår' },
-  { id: '4', action: 'Avvisade ansökan', volunteer: 'Peter Nilsson', time: 'Igår' },
-];
-
 export default function SocialWorkerDashboard() {
   const [user, setUser] = useState<any>(null);
-  const [stats, setStats] = useState(mockStats);
-  const [pendingApplications, setPendingApplications] = useState(mockPendingApplications);
-  const [recentActivity, setRecentActivity] = useState(mockRecentActivity);
+  const [stats, setStats] = useState({
+    pendingApplications: 0,
+    approvedVolunteers: 0,
+    rejectedThisMonth: 0,
+    activeMatches: 0
+  });
+  const [pendingApplications, setPendingApplications] = useState<any[]>([]);
+  const [recentActivity, setRecentActivity] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+  }, []);
+
+  // Fetch real data from database
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/social-worker/stats');
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          setStats(data.stats);
+          setPendingApplications(data.pendingApplications);
+          setRecentActivity(data.recentActivity);
+        }
+      } catch (error) {
+        console.error('Error fetching social worker stats:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchStats();
   }, []);
 
   const handleMunicipalityClick = (municipalityName: string) => {

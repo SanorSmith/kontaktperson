@@ -35,35 +35,38 @@ interface RecentActivity {
   date: string;
 }
 
-// Mock data
-const mockStats = {
-  totalSocialWorkers: 47,
-  pendingVerification: 5,
-  activeAccounts: 42,
-  totalVolunteers: 156
-};
-
-const mockRecentActivity: RecentActivity[] = [
-  { id: '1', name: 'Anna Svensson', email: 'anna.svensson@stockholm.se', municipality: 'Stockholm', status: 'pending', date: '2024-01-12' },
-  { id: '2', name: 'Erik Johansson', email: 'erik.j@goteborg.se', municipality: 'Göteborg', status: 'verified', date: '2024-01-11' },
-  { id: '3', name: 'Maria Lindberg', email: 'maria.l@malmo.se', municipality: 'Malmö', status: 'pending', date: '2024-01-11' },
-  { id: '4', name: 'Johan Andersson', email: 'johan.a@uppsala.se', municipality: 'Uppsala', status: 'verified', date: '2024-01-10' },
-  { id: '5', name: 'Lisa Karlsson', email: 'lisa.k@linkoping.se', municipality: 'Linköping', status: 'inactive', date: '2024-01-09' },
-];
-
-const mockMunicipalityData = [
-  { name: 'Stockholm', count: 15 },
-  { name: 'Göteborg', count: 12 },
-  { name: 'Malmö', count: 8 },
-  { name: 'Uppsala', count: 6 },
-  { name: 'Linköping', count: 4 },
-  { name: 'Örebro', count: 2 },
-];
-
 export default function AdminDashboard() {
-  const [stats, setStats] = useState(mockStats);
-  const [recentActivity, setRecentActivity] = useState(mockRecentActivity);
-  const [isLoading, setIsLoading] = useState(false);
+  const [stats, setStats] = useState({
+    totalSocialWorkers: 0,
+    pendingVerification: 0,
+    activeAccounts: 0,
+    totalVolunteers: 0
+  });
+  const [recentActivity, setRecentActivity] = useState<RecentActivity[]>([]);
+  const [municipalityData, setMunicipalityData] = useState<{name: string, count: number}[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch real data from database
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        setIsLoading(true);
+        const response = await fetch('/api/admin/stats');
+        const data = await response.json();
+        
+        if (response.ok && data.success) {
+          setStats(data.stats);
+          setRecentActivity(data.recentActivity);
+          setMunicipalityData(data.municipalityData);
+        }
+      } catch (error) {
+        console.error('Error fetching admin stats:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    fetchStats();
+  }, []);
 
   const statCards: StatCard[] = [
     {
@@ -237,7 +240,7 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl border border-gray-200 p-6">
           <h3 className="font-semibold text-[#003D5C] mb-4">Socialsekreterare per kommun</h3>
           <div className="space-y-3">
-            {mockMunicipalityData.map((item, index) => (
+            {municipalityData.map((item: {name: string, count: number}, index: number) => (
               <div key={index} className="flex items-center gap-3">
                 <span className="w-24 text-sm text-gray-600 truncate">{item.name}</span>
                 <div className="flex-1 bg-gray-100 rounded-full h-6 overflow-hidden">
