@@ -48,32 +48,129 @@ The Kontaktperson Platform is a comprehensive web application designed to connec
 
 ## 🛠️ Tech Stack
 
-### Frontend
-- **Framework**: Next.js 14.2.35 with App Router
-- **Language**: TypeScript 5
-- **Styling**: Tailwind CSS 3.3.0
-- **Icons**: Lucide React 0.263.1
-- **Maps**: Leaflet 1.9.4 + React Leaflet 4.2.1
-- **Charts**: Recharts 2.10.0
+### Programming Languages
+- **TypeScript 5**: Primary language with strict mode enabled for type safety
+- **JavaScript**: Runtime execution with ES2022 features
+- **SQL**: Database schema and queries (PostgreSQL dialect)
+
+### Frontend Framework & Libraries
+- **Next.js 14.2.35**: React framework with App Router architecture
+  - React Server Components (RSC)
+  - Client-side rendering with 'use client' directive
+  - Middleware for authentication and route protection
+  - API routes for backend functionality
+- **React 18**: UI library with concurrent features
+- **React DOM 18**: DOM rendering engine
+
+### UI & Styling
+- **Tailwind CSS 3.3.0**: Utility-first CSS framework
+  - Custom color palette for Swedish theme
+  - Responsive design utilities
+  - PostCSS integration
+- **PostCSS 8**: CSS transformation pipeline
+- **Autoprefixer 10.0.1**: CSS vendor prefixing
+- **Lucide React 0.263.1**: Modern icon library with 300+ icons
+
+### Mapping & Visualization
+- **Leaflet 1.9.4**: Open-source interactive maps
+- **React Leaflet 4.2.1**: React integration for Leaflet
+- **Recharts 2.10.0**: Data visualization and charting library
 
 ### Backend & Database
-- **Database**: Supabase (PostgreSQL)
-- **Authentication**: Supabase Auth
-- **Real-time**: Supabase Realtime
-- **API**: Next.js API Routes
-- **Email**: Resend 6.7.0
+- **Supabase**: Backend-as-a-Service platform
+  - **@supabase/supabase-js 2.39.0**: JavaScript client library
+  - PostgreSQL database with real-time subscriptions
+  - Authentication service with JWT tokens
+  - Row Level Security (RLS) policies
+  - Real-time database updates
+  - File storage capabilities
 
-### Development Tools
-- **Package Manager**: npm
-- **Linting**: ESLint 8 with Next.js config
-- **Environment**: dotenv 17.2.3
-- **Type Checking**: TypeScript 5
-- **Build Tool**: Next.js built-in
+### Email Services
+- **Resend 6.7.0**: Email delivery service
+  - Transactional emails
+  - Template-based email sending
+  - API-driven email management
 
-### Deployment
-- **Platform**: Vercel
+### Development Tools & Build System
+- **Node.js**: JavaScript runtime environment
+- **npm**: Package manager and dependency resolution
+- **TypeScript Compiler 5**: Type checking and transpilation
+- **SWC Compiler**: Fast Rust-based compiler for Next.js
+- **Webpack**: Module bundling and optimization
+- **TSX 4.7.0**: TypeScript execution for scripts
+
+### Code Quality & Linting
+- **ESLint 8**: JavaScript/TypeScript linting
+- **eslint-config-next 14.2.35**: Next.js specific ESLint rules
+- **TypeScript Strict Mode**: Enhanced type checking
+- **PostCSS**: CSS processing and optimization
+
+### Environment & Configuration
+- **dotenv 17.2.3**: Environment variable management
+- **next-env.d.ts**: Next.js TypeScript declarations
+- **Custom Next.js Configuration**:
+  - React Strict Mode enabled
+  - SWC minification
+  - Package import optimization
+  - Console removal in production
+  - Webpack fallbacks for browser compatibility
+
+### Deployment & Hosting
+- **Vercel**: Cloud platform for Next.js applications
+  - Automatic deployments from Git
+  - Global CDN distribution
+  - Serverless functions
+  - Edge network optimization
+  - Environment variable management
+- **Project ID**: prj_s9jzjm4YUCat0eXRfyit7Zw5WyPK
+
+### Database Management
+- **Supabase SQL**: PostgreSQL database with extensions
+- **Database Scripts**:
+  - `setup-database-v2.sql`: Complete schema definition
+  - `fix-rls-policies.sql`: Security policy updates
+  - `seed-volunteers.ts`: Data seeding utilities
+  - `create-admin.ts`: Admin user creation
+
+### Development Scripts
+- **npm run dev**: Development server with hot reload
+- **npm run build**: Production build optimization
+- **npm run start**: Production server startup
+- **npm run lint**: Code quality checking
+- **npm run create-admin**: Admin user creation utility
+
+### TypeScript Configuration
+- **Target**: ES2022 with modern JavaScript features
+- **Module**: ESNext with bundler resolution
+- **JSX**: React JSX preserve mode
+- **Strict**: All strict type checking enabled
+- **Path Aliases**: `@/*` mapped to project root
+- **Incremental**: Fast compilation with caching
+
+### CSS Architecture
+- **Tailwind CSS**: Utility-first styling approach
+- **Custom Theme**: Swedish-inspired color palette
+  - Deep Blue (#003D5C): Primary brand color
+  - Warm Teal (#006B7D): Secondary accent
+  - Warm Orange (#F39C12): Highlight color
+  - Soft Blue (#E8F4F8): Background light
+  - Dark Blue Grey (#2C3E50): Text dark
+  - Success Green (#27AE60): Positive actions
+
+### Performance Optimizations
+- **Dynamic Imports**: Code splitting with React.lazy
+- **Package Optimization**: Tree shaking for lucide-react, leaflet, react-leaflet
+- **Image Optimization**: Next.js Image component usage
+- **Bundle Analysis**: Webpack optimization for production
+- **Caching Strategies**: Browser and CDN caching
+
+### Security Features
+- **JWT Authentication**: Supabase Auth with secure tokens
+- **Row Level Security**: Database-level access control
 - **Environment Variables**: Secure configuration management
-- **CI/CD**: Automated deployment on git push
+- **HTTPS Enforcement**: Production SSL/TLS
+- **Input Validation**: TypeScript type safety
+- **CORS Configuration**: Proper cross-origin settings
 
 ## 🏗️ Architecture
 
